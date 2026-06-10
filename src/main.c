@@ -43,16 +43,16 @@ int main() {
 
         switch ((OpcaoMenuPrincipal)opcao_escolhida) {
             case OP_CADASTRAR_CLIENTE:
-                cliente_cadastrar();
+                cliente_menu_cadastrar();
                 break;
             case OP_CADASTRAR_PRODUTO:
-                produto_cadastrar();
+                produto_menu_cadastrar();
                 break;
             case OP_REGISTRAR_PEDIDO:
-                pedido_registrar();
+                pedido_menu_registrar();
                 break;
             case OP_REGISTRAR_DEVOLUCAO:
-                devolucao_registrar();
+                devolucao_menu_registrar();
                 break;
             case OP_RELATORIO_DIARIO:
                 relatorio_diario();
