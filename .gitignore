@@ -1,0 +1,24 @@
+# Arquivos de compilação
+*.o
+*.out
+*.exe
+*.obj
+*.dll
+*.so
+*.a
+
+# Arquivos de dados e relatórios gerados pelo sistema
+*.csv
+relatorio_diario.txt
+relatorio_mensal.txt
+relatorio_anual.txt
+
+# Arquivos do sistema operacional / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Binários de Teste
+tests/bin_*
+
