@@ -4,8 +4,10 @@
 #include "test_utils.h"
 
 int main() {
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("database/pedidos.csv");
+    remove("metadata/pedidos.csv.meta");
+    remove("database/itens_pedido.csv");
+    remove("metadata/itens_pedido.csv.meta");
 
     Pedido p = {1, 10, "2023-10-01"};
     ASSERT_EQ(0, csv_inserir_pedido(&p));
@@ -29,8 +31,10 @@ int main() {
     ASSERT_EQ(1, press[0].id);
     ASSERT_STR_EQ("2023-10-01", press[0].data);
 
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("data/pedidos.csv");
+    remove("data/pedidos.csv.meta");
+    remove("data/itens_pedido.csv");
+    remove("data/itens_pedido.csv.meta");
     printf("test_pedido PASSED\n");
     return 0;
 }

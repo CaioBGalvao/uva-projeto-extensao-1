@@ -6,8 +6,10 @@
 #include "test_utils.h"
 
 void criar_massa_dados() {
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("database/pedidos.csv");
+    remove("metadata/pedidos.csv.meta");
+    remove("database/itens_pedido.csv");
+    remove("metadata/itens_pedido.csv.meta");
 
     // Pedido 1: 2023-10-01 (100.0)
     Pedido p1 = {1, 10, "2023-10-01"};
@@ -60,8 +62,10 @@ void test_relatorio_diario() {
 
     ASSERT_EQ(1, encontrou_total);
 
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("database/pedidos.csv");
+    remove("metadata/pedidos.csv.meta");
+    remove("database/itens_pedido.csv");
+    remove("metadata/itens_pedido.csv.meta");
     remove("input_mock.txt");
     remove("output_mock.txt");
     
@@ -97,8 +101,10 @@ void test_relatorio_mensal() {
 
     ASSERT_EQ(1, encontrou_total);
 
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("database/pedidos.csv");
+    remove("metadata/pedidos.csv.meta");
+    remove("database/itens_pedido.csv");
+    remove("metadata/itens_pedido.csv.meta");
     remove("input_mock.txt");
     remove("output_mock.txt");
     
@@ -134,8 +140,10 @@ void test_relatorio_anual() {
 
     ASSERT_EQ(1, encontrou_total);
 
-    remove("pedidos.csv");
-    remove("itens_pedido.csv");
+    remove("data/pedidos.csv");
+    remove("data/pedidos.csv.meta");
+    remove("data/itens_pedido.csv");
+    remove("data/itens_pedido.csv.meta");
     remove("input_mock.txt");
     remove("output_mock.txt");
     

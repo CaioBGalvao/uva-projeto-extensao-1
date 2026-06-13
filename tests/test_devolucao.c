@@ -4,7 +4,8 @@
 #include "test_utils.h"
 
 int main() {
-    remove("devolucoes.csv");
+    remove("database/devolucoes.csv");
+    remove("metadata/devolucoes.csv.meta");
 
     ASSERT_EQ(0, csv_contar_devolucoes_item(5));
 
@@ -21,7 +22,8 @@ int main() {
     ASSERT_EQ(1, csv_contar_devolucoes_item(9));
     ASSERT_EQ(0, csv_contar_devolucoes_item(1));
 
-    remove("devolucoes.csv");
+    remove("data/devolucoes.csv");
+    remove("data/devolucoes.csv.meta");
     printf("test_devolucao PASSED\n");
     return 0;
 }
