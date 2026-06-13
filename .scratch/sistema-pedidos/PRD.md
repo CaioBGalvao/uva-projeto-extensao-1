@@ -1,3 +1,5 @@
+# Sistema de Pedidos - PRD
+
 Status: ready-for-agent
 
 ## Problem Statement
@@ -34,8 +36,9 @@ The solution is a console application ("CLI") in C, modularized into clear layer
 ## Testing Decisions
 
 Tests in this academic environment will occur via external behavior verification rather than rigid automated routines, with proper documentation of inputs and outputs.
+
 - Success validation ("Good Test") will consist of performing complete operations via CLI and cross-referencing them with the data filled in the CSV files. We will document the input values used in the tests in a test file and present the respective processed outputs.
-- Tested Modules: 
+- Tested Modules:
   - Base CRUD (Client and Product).
   - Order Management (Generation of `pedido` referencing `itens_pedido`).
   - Return Flow (testing the occurrence of the first clean Return and the second with the application of the 20 BRL fee).
