@@ -1,11 +1,7 @@
 # Limites do sistema como constantes configuráveis
 
-O requisito menciona "50 vendas por dia" sem definir claramente a qual dimensão se aplica. A coordenação ainda não esclareceu. Existem três interpretações possíveis:
+O professor informou que a restrição de 50 itens foi removida, portanto não há mais limites de volume no sistema.
 
-1. 50 pedidos por dia por loja
-2. 50 itens por pedido
-3. 50 unidades por item por pedido
+No entanto, o requisito obrigatório do projeto exige o uso de "array" (vetores de tamanho fixo em C) e o escopo acadêmico favorece simplicidade, desencorajando o uso de alocação dinâmica.
 
-Decidimos usar `#define` para todas as três dimensões, com valor padrão 50. Quando a coordenação definir o significado exato, o programador ajusta a constante correspondente sem alterar structs ou lógica.
-
-Alternativa considerada: alocação dinâmica com `malloc`. Descartada porque o requisito obrigatório exige "array" (implica tamanho fixo) e o escopo acadêmico favorece simplicidade.
+Decidimos manter o uso de `#define` para as dimensões, porém com um valor limite seguro e amplo (`9999`), simulando a ausência de limites práticos para as avaliações.

@@ -72,11 +72,11 @@ Estes módulos são responsáveis pela interface de texto com o usuário (I/O) e
 1. Solicita a data do pedido (formato: `AAAA-MM-DD`).
 2. Solicita o ID do cliente.
    - **Validação**: Deve chamar `csv_buscar_cliente_por_id`. Se retornar erro, informa que o cliente não existe e aborta a operação.
-3. Inicia um loop para adicionar itens ao pedido (máximo de `MAX_ITENS_PEDIDO` itens):
+3. Inicia um loop para adicionar itens ao pedido:
    - Solicita o ID do produto.
      - **Validação**: Chama `csv_buscar_produto_por_id`. Se não existir, avisa o usuário e pede outro ID.
    - Solicita a quantidade.
-     - **Validação**: Deve ser maior que 0 e menor ou igual a `MAX_QTD_ITEM`.
+     - **Validação**: Deve ser maior que 0.
    - Preenche os campos do `ItemPedido` (calculando `valor_total = quantidade * preco_unitario`).
    - Pergunta se o usuário deseja adicionar mais itens.
 4. Obtém o próximo ID do pedido chamando `csv_obter_proximo_id("dados/pedidos.csv")`.

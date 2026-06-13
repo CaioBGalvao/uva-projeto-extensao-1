@@ -2,51 +2,53 @@ Status: ready-for-agent
 
 ## Problem Statement
 
-Estudantes de Ciência da Computação precisam desenvolver um sistema acadêmico de gerenciamento de loja em C para avaliação. O projeto exige a criação de uma estrutura robusta capaz de gerenciar entidades como Clientes, Produtos e Pedidos. Ele precisa suportar relatórios diários, mensais e anuais. Além disso, o sistema deve registrar Devoluções de forma realista (como escambo de produtos, gerando multas apenas a partir da segunda devolução), usar persistência de dados puramente em arquivos CSV para simular um banco de dados relacional e estar perfeitamente adequado para ser avaliado através do prompt do Windows sem que a janela feche abruptamente.
+Computer Science students need to develop an academic store management system in C for grading. The project requires creating a robust structure capable of managing entities such as Clients, Products, and Orders. It must support daily, monthly, and annual reports. Furthermore, the system must handle Returns realistically (as an exchange of products, applying fees only from the second return onwards), use pure CSV file data persistence to simulate a relational database, and be perfectly suited to be evaluated via the Windows prompt without the window closing abruptly.
 
 ## Solution
 
-A solução é um sistema de console ("CLI") em C, modularizado em camadas claras (como Interface, Regras de Negócio e Persistência). O sistema faz uso do modelo relacional entre vários arquivos `.csv` para cada entidade (Cliente, Produto, Pedido, ItemPedido, Devolucao). O sistema é à prova de falhas comuns em aplicações de console através da proteção de loops, checagem de limites de *arrays* com base em `#define` (como o limite de vendas diárias) e imposição de tamanhos de string como `MAX_NOME 255`. Interações para Windows (`system("pause")` ou equivalentes) são ativadas em pontos de saída da tela para permitir que o avaliador inspecione os resultados. 
+The solution is a console application ("CLI") in C, modularized into clear layers (like Interface, Business Rules, and Persistence). The system uses a relational model across multiple `.csv` files for each entity (Client, Product, Order, OrderItem, Return). The system is fail-proof against common console application issues by protecting loops, checking array bounds based on `#define` (such as the daily sales limit), and enforcing string size limits like `MAX_NOME 255`. Windows interactions (`system("pause")` or equivalents) are triggered at screen exit points to allow the evaluator to inspect the results.
 
 ## User Stories
 
-1. As a usuário do sistema, I want to cadastrar um Cliente com um ID único, nome de até 255 caracteres e dados de contato, so that o sistema guarde quem está realizando as compras.
-2. As a usuário do sistema, I want to cadastrar Produtos com IDs únicos, nomes (até 255 chars) e preços, so that eles possam ser adicionados a pedidos futuros.
-3. As a usuário do sistema, I want to registrar um Pedido associando um Cliente a múltiplos Itens (Produtos e quantidades), so that eu possa faturar e registrar a transação comercial.
-4. As a usuário do sistema, I want to definir a quantidade de produtos vendidos em cada ItemPedido, so that o sistema calcule o valor total multiplicando pela quantidade e registre o preço unitário congelado no momento da compra.
-5. As a usuário do sistema, I want to solicitar uma Devolução, devolvendo integralmente os produtos de um ItemPedido específico, so that o Cliente realize um escambo (sem reembolso monetário da transação original).
-6. As a administrador, I want que o sistema cobre automaticamente uma taxa extra de logística reversa de R$ 20,00 a partir da segunda Devolução do mesmo ItemPedido pelo mesmo Cliente, so that eu cubra custos excessivos de transporte.
-7. As a professor avaliador, I want to visualizar Relatórios de Vendas Diários, Mensais e Anuais detalhados na tela, so that eu verifique o funcionamento da agregação de dados.
-8. As a professor avaliador, I want que a janela do terminal no Windows faça uma pausa após executar uma rotina ou apresentar um relatório, so that eu tenha tempo de ler os outputs sem a tela fechar sozinha.
-9. As a desenvolvedor, I want to usar constantes configuráveis (`#define`) para os limites máximos (como 50 unidades de itens ou vendas por dia), so that a coordenação possa mudar esses requisitos facilmente no código se o escopo da disciplina for alterado.
-10. As a desenvolvedor, I want to salvar todos os dados usando um formato CSV relacional (arquivos separados com IDs referenciando uns aos outros), so that eu garanta a persistência entre reinícios e mantenha os dados normalizados sem duplicatas.
+1. As a system user, I want to register a Client with a unique ID, name of up to 255 characters, and contact data, so that the system stores who is making the purchases.
+2. As a system user, I want to register Products with unique IDs, names (up to 255 chars), and prices, so that they can be added to future orders.
+3. As a system user, I want to register an Order associating a Client with multiple Items (Products and quantities), so that I can bill and record the commercial transaction.
+4. As a system user, I want to define the quantity of products sold in each OrderItem, so that the system calculates the total value by multiplying it by the quantity and records the unit price frozen at the time of purchase.
+5. As a system user, I want to request a Return, fully returning the products of a specific OrderItem, so that the Client performs an exchange (without a monetary refund of the original transaction).
+6. As an administrator, I want the system to automatically charge an extra reverse logistics fee of R$ 20.00 starting from the second Return of the same OrderItem by the same Client, so that I cover excessive transport costs.
+7. As an evaluating professor, I want to view detailed Daily and Monthly Sales Reports on the screen, so that I verify the data aggregation functionality.
+8. As an evaluating professor, I want to view the Annual Report sorted in descending order by each month's revenue, so that I can identify the highest and lowest sales months.
+9. As an evaluating professor, I want the terminal window on Windows to pause after executing a routine or presenting a report, so that I have time to read the outputs without the screen closing by itself.
+10. As a developer, I want to use configurable constants (`#define`) with large values (e.g., 9999), so that I fulfill the academic requirement of using static arrays without imposing practical volume limits (since the 50 items restriction was removed).
+11. As a developer, I want to save all data using a relational CSV format (separate files with IDs referencing each other), so that I ensure persistence between restarts and keep the data normalized without duplicates.
 
 ## Implementation Decisions
 
-- **Persistência Relacional**: Uso de arquivos CSV isolados (`clientes.csv`, `produtos.csv`, `pedidos.csv`, `itens_pedido.csv`, `devolucoes.csv`) para simular o modelo relacional de bancos de dados [ADR-0002].
-- **Limites Físicos de Strings**: Variáveis de nome usarão arrays de tamanho estático com `MAX_NOME 255` em vez de ponteiros flexíveis alocados via `malloc`. Isso reduz a sobrecarga computacional de lidar com alocação em disco para strings de tamanhos aleatórios [ADR-0003].
-- **Configurações Globais Fixas**: Uso de `#define` (ex: `#define LIMITE_VENDAS_DIA 50`) para cobrir regras de tamanho ainda não 100% clarificadas pela faculdade, em vez de arriscar reprovação ou falta de flexibilidade [ADR-0001].
-- **Camada de Compatibilidade Windows**: Implementação de retenções no terminal (como esperar tecla do teclado antes de voltar ao menu principal ou antes do `return 0` na main) [ADR-0004].
-- **Regras do Domínio de Devoluções**: Devolução gera "escambo", não gera estorno. A lógica deve buscar na base de dados (ou base CSV) se já existe uma devolução vinculada àquele ItemPedido. Se encontrar registro prévio, a função aplica uma taxa de 20 reais.
+- **Relational Persistence**: Usage of isolated CSV files (`clientes.csv`, `produtos.csv`, `pedidos.csv`, `itens_pedido.csv`, `devolucoes.csv`) to simulate the relational database model [ADR-0002].
+- **Physical String Limits**: Name variables will use static size arrays with `MAX_NOME 255` instead of flexible pointers allocated via `malloc`. This reduces the computational overhead of handling disk allocation for strings of random sizes [ADR-0003].
+- **Volume Limits**: The original restriction of 50 items/orders was removed by the professor. To meet the academic obligation of using static arrays, we use `#define` with large values (e.g., 9999) simulating the absence of practical limits [ADR-0001].
+- **Windows Compatibility Layer**: Implementation of terminal pauses (like waiting for a keystroke before returning to the main menu or before the `return 0` in main) [ADR-0004].
+- **Return Domain Rules**: A return generates an "exchange", not a refund. The logic must search the database (or CSV base) to see if a return linked to that OrderItem already exists. If a prior record is found, the function applies a 20 BRL fee.
+- **Sorting Algorithm**: Explicit implementation of a sorting algorithm (e.g., Bubble Sort or Insertion Sort) to organize the months of the Annual Report in descending order of revenue, complying with the technical requirement of the project.
 
 ## Testing Decisions
 
-Os testes neste ambiente acadêmico se darão por verificação externa do comportamento em vez de rotinas rígidas automatizadas.
-- A validação de sucesso ("Good Test") consistirá em realizar operações completas via CLI e cruzar com os dados preenchidos nos arquivos CSV. 
-- Módulos Testados: 
-  - Crud Base (Cliente e Produto).
-  - Gestão de Pedidos (Geração de `pedido` referenciando `itens_pedido`).
-  - Fluxo de Devolução (testando a ocorrência da primeira Devolução limpa e a segunda com aplicação de 20 reais de taxa).
-  - Geração de Relatórios (Validação de cálculos de lucro em relatórios).
-- Táticas de Fronteira: Serão inseridos strings de tamanho acima de 255 chars, bem como inserções numéricas que extrapolem os `#define` de limites de venda, para garantir que o sistema proteja esses *boundaries* e informe o usuário através da camada de Terminal.
+Tests in this academic environment will occur via external behavior verification rather than rigid automated routines, with proper documentation of inputs and outputs.
+- Success validation ("Good Test") will consist of performing complete operations via CLI and cross-referencing them with the data filled in the CSV files. We will document the input values used in the tests in a test file and present the respective processed outputs.
+- Tested Modules: 
+  - Base CRUD (Client and Product).
+  - Order Management (Generation of `pedido` referencing `itens_pedido`).
+  - Return Flow (testing the occurrence of the first clean Return and the second with the application of the 20 BRL fee).
+  - Report Generation (Validation of profit calculations in reports and correct sorting in the Annual Report).
+- Boundary Tactics: Strings larger than 255 chars will be inserted to ensure the system protects these memory boundaries and informs the user through the Terminal layer.
 
 ## Out of Scope
 
-- Interface Gráfica de Usuário (GUI) e Web (Focado 100% em Terminal CLI C).
-- Bancos de dados SQL nativos (SQLite, MySQL, Postgres). Deve-se usar arquivo texto (CSV) sob as mesmas amarras limitadoras de IO.
-- Gestão paralela concorrente e *Thread Safeness*. Como se trata de console single player para projeto acadêmico, não haverá mitigação de *race conditions* de concorrência com o mesmo arquivo CSV.
-- Logística real de reenvio entre as devoluções (rastreio de pacote, status de entrega - irrelevante para este escopo).
+- Graphical User Interface (GUI) and Web (Focused 100% on C CLI Terminal).
+- Native SQL Databases (SQLite, MySQL, Postgres). Text files (CSV) must be used under the same IO limiting constraints.
+- Concurrent parallel management and Thread Safeness. Since it's a single-player console app for an academic project, there will be no mitigation of concurrency race conditions with the same CSV file.
+- Real return shipping logistics (package tracking, delivery status - irrelevant for this scope).
 
 ## Further Notes
 
-A aplicação usa o `CONTEXT.md` na raiz para o Glossário e `docs/adr/` para *Architectural Decision Records*. Sempre consultar tais diretórios antes de expandir classes ou *structs*.
+The application uses `CONTEXT.md` in the root for the Glossary and `docs/adr/` for Architectural Decision Records. Always consult such directories before expanding classes or structs.
