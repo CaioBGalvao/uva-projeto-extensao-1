@@ -1,9 +1,9 @@
 #ifndef TIPOS_H
 #define TIPOS_H
 
-#define MAX_PEDIDOS_DIA 50
-#define MAX_ITENS_PEDIDO 50
-#define MAX_QTD_ITEM 50
+#define MAX_PEDIDOS_DIA 9999
+#define MAX_ITENS_PEDIDO 9999
+#define MAX_QTD_ITEM 9999
 #define MAX_NOME 255
 #define TAM_DATA 11 // Formato: AAAA-MM-DD + \0
 

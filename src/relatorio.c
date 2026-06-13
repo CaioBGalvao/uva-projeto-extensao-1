@@ -9,9 +9,9 @@ void relatorio_diario(void) {
     printf("Digite a data para o relatorio (AAAA-MM-DD): ");
     if (scanf("%10s", data_alvo) != 1) return;
 
-    Pedido pedidos[1000];
+    Pedido pedidos[MAX_PEDIDOS_DIA];
     int qtd_pedidos = 0;
-    if (csv_ler_todos_pedidos(pedidos, 1000, &qtd_pedidos) != 0) return;
+    if (csv_ler_todos_pedidos(pedidos, MAX_PEDIDOS_DIA, &qtd_pedidos) != 0) return;
 
     float total_faturado = 0.0f;
     int pedidos_no_dia = 0;
@@ -35,7 +35,7 @@ void relatorio_diario(void) {
     printf("Total Faturado: R$ %.2f\n", total_faturado);
     printf("------------------------\n");
 
-    FILE* f = fopen("relatorio_diario.txt", "w");
+    FILE* f = fopen("storage/relatorio_diario.txt", "w");
     if (f) {
         fprintf(f, "--- RELATORIO DIARIO ---\n");
         fprintf(f, "Data: %s\n", data_alvo);
@@ -52,9 +52,9 @@ void relatorio_mensal(void) {
     printf("Digite o mes para o relatorio (AAAA-MM): ");
     if (scanf("%7s", data_alvo) != 1) return;
 
-    Pedido pedidos[1000];
+    Pedido pedidos[MAX_PEDIDOS_DIA];
     int qtd_pedidos = 0;
-    if (csv_ler_todos_pedidos(pedidos, 1000, &qtd_pedidos) != 0) return;
+    if (csv_ler_todos_pedidos(pedidos, MAX_PEDIDOS_DIA, &qtd_pedidos) != 0) return;
 
     float total_faturado = 0.0f;
     int pedidos_no_mes = 0;
@@ -78,7 +78,7 @@ void relatorio_mensal(void) {
     printf("Total Faturado: R$ %.2f\n", total_faturado);
     printf("------------------------\n");
 
-    FILE* f = fopen("relatorio_mensal.txt", "w");
+    FILE* f = fopen("storage/relatorio_mensal.txt", "w");
     if (f) {
         fprintf(f, "--- RELATORIO MENSAL ---\n");
         fprintf(f, "Mes: %s\n", data_alvo);
@@ -109,9 +109,9 @@ void relatorio_anual(void) {
     printf("Digite o ano para o relatorio (AAAA): ");
     if (scanf("%4s", ano_alvo) != 1) return;
 
-    Pedido pedidos[1000];
+    Pedido pedidos[MAX_PEDIDOS_DIA];
     int qtd_pedidos = 0;
-    if (csv_ler_todos_pedidos(pedidos, 1000, &qtd_pedidos) != 0) return;
+    if (csv_ler_todos_pedidos(pedidos, MAX_PEDIDOS_DIA, &qtd_pedidos) != 0) return;
 
     MesFaturamento faturamentos[12];
     for (int i = 0; i < 12; i++) {
@@ -151,7 +151,7 @@ void relatorio_anual(void) {
     printf("Total Faturado no Ano: R$ %.2f\n", total_anual);
     printf("------------------------\n");
 
-    FILE* f = fopen("relatorio_anual.txt", "w");
+    FILE* f = fopen("storage/relatorio_anual.txt", "w");
     if (f) {
         fprintf(f, "--- RELATORIO ANUAL ---\n");
         fprintf(f, "Ano: %s\n", ano_alvo);

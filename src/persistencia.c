@@ -3,11 +3,11 @@
 #include <string.h>
 #include "persistencia.h"
 
-#define ARQ_CLIENTES "clientes.csv"
-#define ARQ_PRODUTOS "produtos.csv"
-#define ARQ_PEDIDOS "pedidos.csv"
-#define ARQ_ITENS_PEDIDO "itens_pedido.csv"
-#define ARQ_DEVOLUCOES "devolucoes.csv"
+#define ARQ_CLIENTES "database/clientes.csv"
+#define ARQ_PRODUTOS "database/produtos.csv"
+#define ARQ_PEDIDOS "database/pedidos.csv"
+#define ARQ_ITENS_PEDIDO "database/itens_pedido.csv"
+#define ARQ_DEVOLUCOES "database/devolucoes.csv"
 
 #define HEADER_CLIENTES "id;nome\n"
 #define HEADER_PRODUTOS "id;nome;preco\n"
@@ -24,7 +24,50 @@ static void garantir_cabecalho(FILE* f, const char* cabecalho) {
     fseek(f, pos, SEEK_SET);
 }
 
+typedef struct {
+    int max_id;
+    int count;
+} Metadata;
+
+static void obter_nome_meta(const char* arquivo_csv, char* arquivo_meta) {
+    const char* basename = strrchr(arquivo_csv, '/');
+    if (basename) basename++; // Pula o '/'
+    else basename = arquivo_csv;
+    sprintf(arquivo_meta, "metadata/%s.meta", basename);
+}
+
+static int ler_metadados(const char* arquivo_csv, Metadata* meta) {
+    char arquivo_meta[256];
+    obter_nome_meta(arquivo_csv, arquivo_meta);
+    FILE* f = fopen(arquivo_meta, "rb");
+    if (!f) return -1;
+    if (fread(meta, sizeof(Metadata), 1, f) != 1) {
+        fclose(f);
+        return -1;
+    }
+    fclose(f);
+    return 0;
+}
+
+static void salvar_metadados(const char* arquivo_csv, const Metadata* meta) {
+    char arquivo_meta[256];
+    obter_nome_meta(arquivo_csv, arquivo_meta);
+    FILE* f = fopen(arquivo_meta, "wb");
+    if (f) {
+        fwrite(meta, sizeof(Metadata), 1, f);
+        fclose(f);
+    }
+}
+
+// Protótipo para o helper que atualiza ao inserir
+static void atualizar_metadados_insercao(const char* arquivo_csv, int novo_id);
+
 int csv_obter_proximo_id(const char* arquivo) {
+    Metadata meta;
+    if (ler_metadados(arquivo, &meta) == 0) {
+        return meta.max_id + 1;
+    }
+
     FILE* f = fopen(arquivo, "r");
     if (!f) return 1;
 
@@ -35,17 +78,32 @@ int csv_obter_proximo_id(const char* arquivo) {
         return 1;
     }
 
-    int max_id = 0;
+    meta.max_id = 0;
+    meta.count = 0;
     while (fgets(linha, sizeof(linha), f)) {
+        meta.count++;
         int id = 0;
         if (sscanf(linha, "%d;", &id) == 1) {
-            if (id > max_id) {
-                max_id = id;
+            if (id > meta.max_id) {
+                meta.max_id = id;
             }
         }
     }
     fclose(f);
-    return max_id + 1;
+    salvar_metadados(arquivo, &meta);
+    return meta.max_id + 1;
+}
+
+static void atualizar_metadados_insercao(const char* arquivo_csv, int novo_id) {
+    Metadata meta;
+    if (ler_metadados(arquivo_csv, &meta) == 0) {
+        if (novo_id > meta.max_id) meta.max_id = novo_id;
+        meta.count++;
+        salvar_metadados(arquivo_csv, &meta);
+    } else {
+        // Falhou ler, chama csv_obter_proximo_id para forçar reconstrução lendo do CSV
+        csv_obter_proximo_id(arquivo_csv);
+    }
 }
 
 // Cliente
@@ -55,6 +113,7 @@ int csv_inserir_cliente(const Cliente* c) {
     garantir_cabecalho(f, HEADER_CLIENTES);
     fprintf(f, "%d;%s\n", c->id, c->nome);
     fclose(f);
+    atualizar_metadados_insercao(ARQ_CLIENTES, c->id);
     return 0;
 }
 
@@ -91,6 +150,7 @@ int csv_inserir_produto(const Produto* p) {
     garantir_cabecalho(f, HEADER_PRODUTOS);
     fprintf(f, "%d;%s;%.2f\n", p->id, p->nome, p->preco);
     fclose(f);
+    atualizar_metadados_insercao(ARQ_PRODUTOS, p->id);
     return 0;
 }
 
@@ -129,6 +189,7 @@ int csv_inserir_pedido(const Pedido* p) {
     garantir_cabecalho(f, HEADER_PEDIDOS);
     fprintf(f, "%d;%d;%s\n", p->id, p->id_cliente, p->data);
     fclose(f);
+    atualizar_metadados_insercao(ARQ_PEDIDOS, p->id);
     return 0;
 }
 
@@ -138,6 +199,7 @@ int csv_inserir_item_pedido(const ItemPedido* ip) {
     garantir_cabecalho(f, HEADER_ITENS_PEDIDO);
     fprintf(f, "%d;%d;%d;%d;%.2f;%.2f\n", ip->id, ip->id_pedido, ip->id_produto, ip->quantidade, ip->preco_unitario, ip->valor_total);
     fclose(f);
+    atualizar_metadados_insercao(ARQ_ITENS_PEDIDO, ip->id);
     return 0;
 }
 
@@ -194,6 +256,7 @@ int csv_inserir_devolucao(const Devolucao* d) {
     garantir_cabecalho(f, HEADER_DEVOLUCOES);
     fprintf(f, "%d;%d;%s;%d;%.2f\n", d->id, d->id_item_pedido, d->data, d->contagem, d->taxa_cobrada);
     fclose(f);
+    atualizar_metadados_insercao(ARQ_DEVOLUCOES, d->id);
     return 0;
 }
 
