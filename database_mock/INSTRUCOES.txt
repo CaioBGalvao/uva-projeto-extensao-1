@@ -1,0 +1,9 @@
+# Guia de Testes com Dados Seed (database_mock)
+
+Os arquivos em `database_mock` contém os seguintes cenários configurados:
+
+- **Teste de Taxa de Devolução**: O Pedido 1 possui 1 devolução registrada (referente ao item 1 do pedido 1). Ao consultar taxas de devolução, você verá dados para este cenário.
+- **Teste de Relatório Diário (Hoje)**: Para testar o relatório de hoje, utilize a data `13/06/2026`. (Existem 2 pedidos cadastrados para esta data).
+- **Teste de Relatório Passado (Mensal/Anual)**: Para testar relatórios de meses ou anos anteriores, solicite o mês `05` e ano `2025` (Existem pedidos cadastrados nas datas `10/05/2025` e `15/05/2025`).
+
+Para aplicar estes dados, execute o script `./seed.sh` na raiz do projeto.
