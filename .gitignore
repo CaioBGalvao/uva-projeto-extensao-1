@@ -22,3 +22,6 @@ Thumbs.db
 # Binários de Teste
 tests/bin_*
 
+database/
+metadata/
+storage/
