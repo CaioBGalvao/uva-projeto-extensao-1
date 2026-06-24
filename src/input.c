@@ -50,8 +50,11 @@ int ler_string(const char *prompt, char *buffer, int max_len) {
         }
         
         if (strcmp(input, "?") == 0) {
+            printf("\033[?1049h\033[H");
+            fflush(stdout);
             lookup_menu();
-            limpar_tela();
+            printf("\033[?1049l");
+            fflush(stdout);
             ic_free(input);
             continue;
         }
@@ -100,8 +103,11 @@ int ler_inteiro(const char *prompt, int *valor) {
         if (input == NULL) return 0;
         
         if (strcmp(input, "?") == 0) {
+            printf("\033[?1049h\033[H");
+            fflush(stdout);
             lookup_menu();
-            limpar_tela();
+            printf("\033[?1049l");
+            fflush(stdout);
             ic_free(input);
             continue;
         }
@@ -125,8 +131,11 @@ int ler_float(const char *prompt, float *valor) {
         if (input == NULL) return 0;
         
         if (strcmp(input, "?") == 0) {
+            printf("\033[?1049h\033[H");
+            fflush(stdout);
             lookup_menu();
-            limpar_tela();
+            printf("\033[?1049l");
+            fflush(stdout);
             ic_free(input);
             continue;
         }
@@ -150,8 +159,11 @@ int ler_char(const char *prompt, char *valor) {
         if (input == NULL) return 0;
         
         if (strcmp(input, "?") == 0) {
+            printf("\033[?1049h\033[H");
+            fflush(stdout);
             lookup_menu();
-            limpar_tela();
+            printf("\033[?1049l");
+            fflush(stdout);
             ic_free(input);
             continue;
         }
