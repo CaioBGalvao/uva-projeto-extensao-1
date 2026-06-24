@@ -3,11 +3,17 @@
 
 // Interface do módulo de Devolução (Dev 4)
 
+#include "tipos.h"
+
 // Responsável pela interação com o usuário via terminal
 void devolucao_menu_registrar(void);
 
-// Regra de negócio testável: captura devolução, verifica se é 2a+ e cobra taxa
-// Retorna 0 em caso de sucesso ou código de erro negativo.
-int devolucao_salvar(int id_item_pedido, const char* data);
+// Processa a devolução aplicando a regra da taxa de R$ 20.00
+// Retornos:
+// 0 = Sucesso
+// -1 = Pedido não encontrado ou vazio
+// -2 = Produto não pertence a este pedido
+// -3 = Erro ao salvar no banco
+int devolucao_processar(int id_pedido, int id_produto, const char* data, Devolucao* out_recibo);
 
 #endif
