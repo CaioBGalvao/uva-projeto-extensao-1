@@ -3,3 +3,6 @@ test_app
 test_esc
 *.o
 tests/bin_*
+.meta
+.log
+.txt
