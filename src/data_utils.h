@@ -1,3 +1,11 @@
+/**
+ * @file data_utils.h
+ * @author Caio Galvao (Dev 5)
+ * @brief Utilitarios para formatacao e parse de datas ISO/BR.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef DATA_UTILS_H
 #define DATA_UTILS_H
 

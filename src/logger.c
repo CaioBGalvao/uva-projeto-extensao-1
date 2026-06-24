@@ -1,3 +1,11 @@
+/**
+ * @file logger.c
+ * @author Caio Galvao (Dev 5)
+ * @brief Implementacao do sistema de log/auditoria.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
@@ -5,6 +13,12 @@
 
 #define ARQ_LOG "storage/acoes_usuario.log"
 
+/**
+ * @brief Executa a operacao de registrar_log.
+ *
+ * @param formato Parametro de entrada.
+ * @param ... Parametro de entrada.
+ */
 void registrar_log(const char* formato, ...) {
     FILE* f = fopen(ARQ_LOG, "a+");
     if (!f) return;

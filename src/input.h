@@ -1,3 +1,11 @@
+/**
+ * @file input.h
+ * @author Caio Galvao (Dev 5)
+ * @brief Interface das funcoes seguras de UX no terminal.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef INPUT_H
 #define INPUT_H
 

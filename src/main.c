@@ -1,3 +1,11 @@
+/**
+ * @file main.c
+ * @author Caio Galvao (Dev 5)
+ * @brief Ponto de entrada do sistema e integracao de menus.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
@@ -12,6 +20,10 @@
 // Esqueleto do arquivo principal (Caio)
 // Permite que os 5 desenvolvedores acoplem suas implementações diretamente no switch/case.
 
+/**
+ * @brief Executa a operacao de exibir_menu.
+ *
+ */
 void exibir_menu() {
     printf("\n====================================\n");
     printf("        SISTEMA DE PEDIDOS          \n");
@@ -27,6 +39,11 @@ void exibir_menu() {
     printf("====================================\n");
 }
 
+/**
+ * @brief Executa a operacao de main.
+ *
+ * @return int Retorno da operacao.
+ */
 int main() {
     int opcao_escolhida;
     

@@ -1,3 +1,11 @@
+/**
+ * @file relatorio.h
+ * @author Caio Galvao (Dev 5)
+ * @brief Interface do modulo de Relatorios.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef RELATORIO_H
 #define RELATORIO_H
 

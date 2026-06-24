@@ -1,3 +1,11 @@
+/**
+ * @file lookup.c
+ * @author Caio Galvao (Dev 5)
+ * @brief Implementacao do sistema de busca rapida (Lookup).
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +18,14 @@
 #define PAGE_SIZE 50
 #define PAGE_SIZE_PEDIDOS 10
 
+/**
+ * @brief Executa a operacao de mostrar_pagina_clientes.
+ *
+ * @param clientes Parametro de entrada.
+ * @param total Parametro de entrada.
+ * @param page Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void mostrar_pagina_clientes(Cliente* clientes, int total, int page) {
     limpar_tela();
     int start = page * PAGE_SIZE;
@@ -29,6 +45,14 @@ static void mostrar_pagina_clientes(Cliente* clientes, int total, int page) {
     printf("----------------------------------------\n");
 }
 
+/**
+ * @brief Executa a operacao de mostrar_pagina_produtos.
+ *
+ * @param produtos Parametro de entrada.
+ * @param total Parametro de entrada.
+ * @param page Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void mostrar_pagina_produtos(Produto* produtos, int total, int page) {
     limpar_tela();
     int start = page * PAGE_SIZE;
@@ -48,6 +72,14 @@ static void mostrar_pagina_produtos(Produto* produtos, int total, int page) {
     printf("----------------------------------------------------\n");
 }
 
+/**
+ * @brief Executa a operacao de mostrar_pagina_pedidos.
+ *
+ * @param pedidos Parametro de entrada.
+ * @param total Parametro de entrada.
+ * @param page Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void mostrar_pagina_pedidos(Pedido* pedidos, int total, int page) {
     limpar_tela();
     int start = page * PAGE_SIZE_PEDIDOS;
@@ -89,6 +121,11 @@ static void mostrar_pagina_pedidos(Pedido* pedidos, int total, int page) {
     }
 }
 
+/**
+ * @brief Executa a operacao de loop_clientes.
+ *
+ * @return static void Retorno da operacao.
+ */
 static void loop_clientes(void) {
     Cliente clientes[1000];
     int total = 0;
@@ -110,6 +147,11 @@ static void loop_clientes(void) {
     }
 }
 
+/**
+ * @brief Executa a operacao de loop_produtos.
+ *
+ * @return static void Retorno da operacao.
+ */
 static void loop_produtos(void) {
     Produto produtos[1000];
     int total = 0;
@@ -131,6 +173,11 @@ static void loop_produtos(void) {
     }
 }
 
+/**
+ * @brief Executa a operacao de loop_pedidos.
+ *
+ * @return static void Retorno da operacao.
+ */
 static void loop_pedidos(void) {
     Pedido pedidos[1000];
     int total = 0;
@@ -152,6 +199,10 @@ static void loop_pedidos(void) {
     }
 }
 
+/**
+ * @brief Executa a operacao de lookup_menu.
+ *
+ */
 void lookup_menu(void) {
     char cmd[32];
     while (1) {

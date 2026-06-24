@@ -1,3 +1,11 @@
+/**
+ * @file relatorio.c
+ * @author Caio Galvao (Dev 5)
+ * @brief Implementacao da geracao de relatorios e sumarizacao de dados.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "relatorio.h"
@@ -7,6 +15,10 @@
 #include "logger.h"
 #include <stdlib.h>
 
+/**
+ * @brief Executa a operacao de relatorio_diario.
+ *
+ */
 void relatorio_diario(void) {
     char data_alvo[TAM_DATA];
     limpar_tela();
@@ -67,6 +79,10 @@ void relatorio_diario(void) {
 }
 
 
+/**
+ * @brief Executa a operacao de relatorio_mensal.
+ *
+ */
 void relatorio_mensal(void) {
     char data_alvo[8];
     limpar_tela();
@@ -131,6 +147,13 @@ typedef struct {
     float total;
 } MesFaturamento;
 
+/**
+ * @brief Executa a operacao de comparar_mes.
+ *
+ * @param a Parametro de entrada.
+ * @param b Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int comparar_mes(const void* a, const void* b) {
     const MesFaturamento* m1 = (const MesFaturamento*)a;
     const MesFaturamento* m2 = (const MesFaturamento*)b;
@@ -139,6 +162,10 @@ int comparar_mes(const void* a, const void* b) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de relatorio_anual.
+ *
+ */
 void relatorio_anual(void) {
     char ano_alvo[5];
     limpar_tela();

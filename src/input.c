@@ -1,3 +1,11 @@
+/**
+ * @file input.c
+ * @author Caio Galvao (Dev 5)
+ * @brief Implementacao de funcoes seguras de UX no terminal.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +14,13 @@
 #include "input.h"
 #include "lookup.h"
 
+/**
+ * @brief Executa a operacao de input_handle_lookup.
+ *
+ * @param count Parametro de entrada.
+ * @param key Parametro de entrada.
+ * @return static int Retorno da operacao.
+ */
 static int input_handle_lookup(int count, int key) {
     (void)count;
     (void)key;
@@ -29,10 +44,18 @@ static int input_handle_lookup(int count, int key) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de input_configurar_atalhos.
+ *
+ */
 void input_configurar_atalhos(void) {
     rl_bind_key('\002', input_handle_lookup); // Ctrl+B
 }
 
+/**
+ * @brief Executa a operacao de limpar_tela.
+ *
+ */
 void limpar_tela(void) {
 #ifdef _WIN32
     system("cls");
@@ -41,6 +64,14 @@ void limpar_tela(void) {
 #endif
 }
 
+/**
+ * @brief Executa a operacao de ler_string.
+ *
+ * @param prompt Parametro de entrada.
+ * @param buffer Parametro de entrada.
+ * @param max_len Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int ler_string(const char *prompt, char *buffer, int max_len) {
     char *input = readline(prompt);
     if (input == NULL) {
@@ -60,6 +91,15 @@ int ler_string(const char *prompt, char *buffer, int max_len) {
     return 1;
 }
 
+/**
+ * @brief Executa a operacao de ler_string_com_padrao.
+ *
+ * @param prompt Parametro de entrada.
+ * @param buffer Parametro de entrada.
+ * @param max_len Parametro de entrada.
+ * @param padrao Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int ler_string_com_padrao(const char *prompt, char *buffer, int max_len, const char *padrao) {
     if (!ler_string(prompt, buffer, max_len)) return 0;
     
@@ -73,6 +113,13 @@ int ler_string_com_padrao(const char *prompt, char *buffer, int max_len, const c
     return 1;
 }
 
+/**
+ * @brief Executa a operacao de ler_inteiro.
+ *
+ * @param prompt Parametro de entrada.
+ * @param valor Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int ler_inteiro(const char *prompt, int *valor) {
     char *input = readline(prompt);
     if (input == NULL) return 0;
@@ -86,6 +133,13 @@ int ler_inteiro(const char *prompt, int *valor) {
     return (ret == 1) ? 1 : 0;
 }
 
+/**
+ * @brief Executa a operacao de ler_float.
+ *
+ * @param prompt Parametro de entrada.
+ * @param valor Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int ler_float(const char *prompt, float *valor) {
     char *input = readline(prompt);
     if (input == NULL) return 0;
@@ -99,6 +153,13 @@ int ler_float(const char *prompt, float *valor) {
     return (ret == 1) ? 1 : 0;
 }
 
+/**
+ * @brief Executa a operacao de ler_char.
+ *
+ * @param prompt Parametro de entrada.
+ * @param valor Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int ler_char(const char *prompt, char *valor) {
     char *input = readline(prompt);
     if (input == NULL) return 0;
