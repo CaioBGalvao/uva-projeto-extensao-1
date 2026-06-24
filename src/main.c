@@ -16,6 +16,27 @@
 #include "relatorio.h"
 #include "input.h"
 #include "logger.h"
+#include "persistencia.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#endif
+
+void configurar_console_windows() {
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode)) {
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        }
+    }
+}
+#endif
 
 // Esqueleto do arquivo principal (Caio)
 // Permite que os 5 desenvolvedores acoplem suas implementações diretamente no switch/case.
@@ -47,13 +68,18 @@ void exibir_menu() {
 int main() {
     int opcao_escolhida;
     
+#ifdef _WIN32
+    configurar_console_windows();
+#endif
+
+    persistencia_init();
     registrar_log("SISTEMA: Programa iniciado.");
     input_configurar_atalhos();
     
     do {
         limpar_tela();
         exibir_menu();
-        if (!ler_inteiro("Escolha uma opcão: ", &opcao_escolhida)) {
+        if (!ler_inteiro("Escolha uma opcao: ", &opcao_escolhida)) {
             printf("Entrada invalida. Tente novamente.\n");
             continue;
         }

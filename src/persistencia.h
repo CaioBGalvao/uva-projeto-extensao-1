@@ -13,6 +13,9 @@
 
 // Retornos: 0 para sucesso, valor negativo em caso de erro.
 
+// Inicialização
+void persistencia_init(void);
+
 // Utilitários de arquivo
 int csv_obter_proximo_id(const char* arquivo);
 

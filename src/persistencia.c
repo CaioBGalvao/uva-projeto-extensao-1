@@ -9,6 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include <direct.h>
+#define MKDIR(path) _mkdir(path)
+#else
+#include <sys/stat.h>
+#define MKDIR(path) mkdir(path, 0777)
+#endif
 #include "persistencia.h"
 
 #define ARQ_CLIENTES "database/clientes.csv"
@@ -37,6 +44,16 @@ static void garantir_cabecalho(FILE* f, const char* cabecalho) {
         fprintf(f, "%s", cabecalho);
     }
     fseek(f, pos, SEEK_SET);
+}
+
+/**
+ * @brief Executa a operacao de inicializacao da persistencia.
+ *
+ */
+void persistencia_init(void) {
+    MKDIR("database");
+    MKDIR("metadata");
+    MKDIR("storage");
 }
 
 typedef struct {
