@@ -33,9 +33,9 @@ void criar_massa_dados() {
 void test_relatorio_diario() {
     criar_massa_dados();
 
-    // Simula entrada do usuário (data 2023-10-01)
+    // Simula entrada do usuário (data 01/10/2023)
     FILE* in = fopen("input_mock.txt", "w");
-    fprintf(in, "2023-10-01\n");
+    fprintf(in, "01/10/2023\n");
     fclose(in);
 
     freopen("input_mock.txt", "r", stdin);
@@ -75,9 +75,9 @@ void test_relatorio_diario() {
 void test_relatorio_mensal() {
     criar_massa_dados();
 
-    // Simula entrada do usuário (mes 2023-10)
+    // Simula entrada do usuário (mes 10/2023)
     FILE* in = fopen("input_mock.txt", "w");
-    fprintf(in, "2023-10\n");
+    fprintf(in, "10/2023\n");
     fclose(in);
 
     freopen("input_mock.txt", "r", stdin);

@@ -2,30 +2,33 @@
 #include <string.h>
 #include "cliente.h"
 #include "persistencia.h"
+#include "input.h"
+#include "logger.h"
 
 // Responsável pela interação com o usuário via terminal
 void cliente_menu_cadastrar(void) {
     char nome[MAX_NOME];
     
+    limpar_tela();
     printf("\n--- Cadastrar Cliente ---\n");
-    printf("Nome do cliente: ");
-    
-    // Ler o nome usando fgets para lidar com espaços
-    if (fgets(nome, sizeof(nome), stdin) != NULL) {
-        // Remover a quebra de linha (\n) lida pelo fgets
-        size_t len = strlen(nome);
-        if (len > 0 && nome[len - 1] == '\n') {
-            nome[len - 1] = '\0';
-        }
+    printf("(Pressione Ctrl+D ou Ctrl+Z com campo vazio para cancelar)\n\n");
+
+    // Solicita o nome
+    if (ler_string("Digite o nome do cliente: ", nome, sizeof(nome))) {
+        // Obtém o próximo ID para exibir na mensagem
+        int proximo_id = csv_obter_proximo_id("database/clientes.csv");
         
         int resultado = cliente_salvar(nome);
         if (resultado == 0) {
-            printf("Cliente '%s' cadastrado com sucesso!\n", nome);
+            // Mensagem de sucesso idêntica a cliente_bittencurt.c
+            printf("\nCliente de ID %d cadastrado com sucesso!\n", proximo_id);
+            registrar_log("SUCESSO: Cadastrou usuario de ID %d, nome '%s'.", proximo_id, nome);
         } else {
-            printf("Erro ao cadastrar o cliente '%s'. Codigo de erro: %d\n", nome, resultado);
+            printf("Erro ao cadastrar o cliente. Codigo de erro: %d\n", resultado);
+            registrar_log("ERRO: Falha ao cadastrar cliente '%s' (Erro %d).", nome, resultado);
         }
     } else {
-        printf("Erro ao ler a entrada.\n");
+        printf("\nOperacao cancelada.\n");
     }
 }
 
@@ -39,7 +42,7 @@ int cliente_salvar(const char* nome) {
     
     Cliente c;
     // Obter o próximo ID válido para cliente
-    c.id = csv_obter_proximo_id("clientes.csv");
+    c.id = csv_obter_proximo_id("database/clientes.csv");
     
     // Copiar o nome de forma segura
     strncpy(c.nome, nome, MAX_NOME - 1);

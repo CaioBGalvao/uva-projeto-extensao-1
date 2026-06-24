@@ -6,6 +6,8 @@
 #include "pedido.h"
 #include "devolucao.h"
 #include "relatorio.h"
+#include "input.h"
+#include "logger.h"
 
 // Esqueleto do arquivo principal (Caio)
 // Permite que os 5 desenvolvedores acoplem suas implementações diretamente no switch/case.
@@ -23,23 +25,23 @@ void exibir_menu() {
     printf("%d. Relatorio Anual\n", OP_RELATORIO_ANUAL);
     printf("%d. Sair\n", OP_SAIR);
     printf("====================================\n");
-    printf("Escolha uma opcao: ");
 }
 
 int main() {
     int opcao_escolhida;
     
+    registrar_log("SISTEMA: Programa iniciado.");
+    input_configurar_atalhos();
+    
     do {
+        limpar_tela();
         exibir_menu();
-        if (scanf("%d", &opcao_escolhida) != 1) {
+        if (!ler_inteiro("Escolha uma opcão: ", &opcao_escolhida)) {
             printf("Entrada invalida. Tente novamente.\n");
-            // Limpa buffer do stdin em caso de entrada não-numérica
-            while (getchar() != '\n');
             continue;
         }
-        
-        // Limpa o buffer do '\n' residual sempre, para que pausas futuras funcionem perfeitamente.
-        while (getchar() != '\n');
+
+        registrar_log("MENU: Usuario escolheu a opcao %d no menu principal.", opcao_escolhida);
 
         switch ((OpcaoMenuPrincipal)opcao_escolhida) {
             case OP_CADASTRAR_CLIENTE:
@@ -64,6 +66,7 @@ int main() {
                 relatorio_anual();
                 break;
             case OP_SAIR:
+                registrar_log("SISTEMA: Encerrando o sistema.");
                 printf("Encerrando o sistema. Ate logo!\n");
                 break;
             default:

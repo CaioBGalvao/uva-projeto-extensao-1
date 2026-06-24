@@ -6,32 +6,40 @@
 #include "tipos.h"
 #include "cliente.h"
 #include "produto.h"
+#include "data_utils.h"
+#include "input.h"
+#include "logger.h"
 
 // Interação com usuário para registrar um pedido
 void pedido_menu_registrar(void) {
     char data[TAM_DATA] = {0};
     int id_cliente = 0;
 
+    limpar_tela();
     printf("\n--- Registrar Pedido ---\n");
+    printf("(Pressione Ctrl+D ou Ctrl+Z com campo vazio para cancelar)\n");
+    printf("(DICA: Pressione Ctrl+B para buscar clientes, produtos e pedidos)\n\n");
 
     // 1. Pergunta a data
-    printf("Data da compra (AAAA-MM-DD): ");
-    if (fgets(data, sizeof(data), stdin) == NULL) {
-        printf("Erro ao ler a data. Abortando.\n");
+    char data_iso[64];
+    obter_data_atual(data_iso, 0);
+    char data_br_padrao[64];
+    converter_data_iso_para_br(data_iso, data_br_padrao, 0);
+
+    char buffer_data[64];
+    if (!ler_string_com_padrao("Data da compra (DD/MM/AAAA) [Enter para atual]: ", buffer_data, sizeof(buffer_data), data_br_padrao)) {
+        printf("\nOperacao cancelada.\n");
         return;
     }
-    size_t len = strlen(data);
-    if (len > 0 && data[len - 1] == '\n') data[len - 1] = '\0';
+
+    converter_data_br_para_iso(buffer_data, data, 0);
 
     // 2. Pergunta ID do cliente e valida
     while (1) {
-        printf("ID do cliente: ");
-        if (scanf("%d", &id_cliente) != 1) {
-            printf("Entrada invalida. Tente novamente.\n");
-            while (getchar() != '\n');
-            continue;
+        if (!ler_inteiro("ID do cliente: ", &id_cliente)) {
+            printf("\nOperacao cancelada.\n");
+            return;
         }
-        while (getchar() != '\n');
 
         Cliente c = {0};
         if (csv_buscar_cliente_por_id(id_cliente, &c) == 0) {
@@ -39,12 +47,10 @@ void pedido_menu_registrar(void) {
             break;
         } else {
             char opc = 'N';
-            printf("Cliente nao encontrado. Deseja tentar novamente? (S/N): ");
-            if (scanf(" %c", &opc) != 1) {
-                printf("Entrada invalida. Abortando.\n");
+            if (!ler_char("Cliente nao encontrado. Deseja tentar novamente? (S/N): ", &opc)) {
+                printf("\nOperacao cancelada.\n");
                 return;
             }
-            while (getchar() != '\n');
             if (opc == 'S' || opc == 's') continue;
             else return;
         }
@@ -64,32 +70,29 @@ void pedido_menu_registrar(void) {
         }
 
         int id_produto = 0;
-        printf("ID do produto: ");
-        if (scanf("%d", &id_produto) != 1) {
-            printf("Entrada invalida. Tente novamente.\n");
-            while (getchar() != '\n');
-            continue;
+        if (!ler_inteiro("ID do produto: ", &id_produto)) {
+            printf("\nOperacao cancelada.\n");
+            return;
         }
-        while (getchar() != '\n');
 
         Produto p = {0};
         if (csv_buscar_produto_por_id(id_produto, &p) != 0) {
             char opc = 'N';
-            printf("Produto nao encontrado. Deseja tentar outro produto? (S/N): ");
-            if (scanf(" %c", &opc) != 1) return;
-            while (getchar() != '\n');
+            if (!ler_char("Produto nao encontrado. Deseja tentar outro produto? (S/N): ", &opc)) {
+                printf("\nOperacao cancelada.\n");
+                return;
+            }
             if (opc == 'S' || opc == 's') continue;
             else break;
         }
+        
+        printf("Produto encontrado: %s | Preco: R$ %.2f\n", p.nome, p.preco);
 
         int qtd = 0;
-        printf("Quantidade: ");
-        if (scanf("%d", &qtd) != 1) {
-            printf("Entrada invalida. Tente novamente.\n");
-            while (getchar() != '\n');
-            continue;
+        if (!ler_inteiro("Quantidade: ", &qtd)) {
+            printf("\nOperacao cancelada.\n");
+            return;
         }
-        while (getchar() != '\n');
 
         if (qtd <= 0) {
             printf("Quantidade deve ser maior que zero. Tente novamente.\n");
@@ -101,12 +104,16 @@ void pedido_menu_registrar(void) {
         strncpy(nomes_produtos[num_itens], p.nome, MAX_NOME - 1);
         nomes_produtos[num_itens][MAX_NOME - 1] = '\0';
         precos_unitarios[num_itens] = p.preco;
+        
+        registrar_log("INTERMEDIARIO: Foi adicionado ao pedido o item %d ('%s') com valor unitario %.2f na quantidade %d.", id_produto, p.nome, p.preco, qtd);
+        
         num_itens++;
 
         char opc = 'N';
-        printf("Deseja adicionar outro produto? (S/N): ");
-        if (scanf(" %c", &opc) != 1) return;
-        while (getchar() != '\n');
+        if (!ler_char("Deseja adicionar outro produto? (S/N): ", &opc)) {
+            printf("\nOperacao cancelada.\n");
+            return;
+        }
         if (opc == 'S' || opc == 's') continue;
         else break;
     }
@@ -118,16 +125,23 @@ void pedido_menu_registrar(void) {
 
     // 4..6 Persistir pedido e itens
     int salvar_result = pedido_salvar(id_cliente, data, ids_produtos, quantidades, num_itens);
-    if (salvar_result != 0) {
+    if (salvar_result <= 0) {
         printf("Erro ao salvar pedido. Codigo: %d\n", salvar_result);
         return;
     }
 
     // 7. Imprimir recibo (reconstruimos valores locais para imprimir)
+    char data_br[11];
+    converter_data_iso_para_br(data, data_br, 0);
     float total = 0.0f;
     printf("\n====== Recibo de Venda ======\n");
-    printf("Data: %s\n", data);
+    printf("Pedido ID: %d\n", salvar_result);
+    printf("Data: %s\n", data_br);
     printf("Cliente ID: %d\n", id_cliente);
+    Cliente c_recibo = {0};
+    if (csv_buscar_cliente_por_id(id_cliente, &c_recibo) == 0) {
+        printf("Nome do Cliente: %s\n", c_recibo.nome);
+    }
     printf("----------------------------\n");
     for (int i = 0; i < num_itens; i++) {
         float line_total = quantidades[i] * precos_unitarios[i];
@@ -137,6 +151,8 @@ void pedido_menu_registrar(void) {
     printf("----------------------------\n");
     printf("Valor total: %.2f\n", total);
     printf("============================\n");
+    
+    registrar_log("SUCESSO: Pedido ID %d fechado. Valor total do pedido: R$ %.2f.", salvar_result, total);
 }
 
 // Regra de negocio: persiste pedido e itens, garantindo ids encadeados
@@ -144,7 +160,7 @@ int pedido_salvar(int id_cliente, const char* data, const int* ids_produtos, con
     if (data == NULL || ids_produtos == NULL || quantidades == NULL || num_itens <= 0) return -1;
 
     Pedido p = {0};
-    p.id = csv_obter_proximo_id("pedidos.csv");
+    p.id = csv_obter_proximo_id("database/pedidos.csv");
     p.id_cliente = id_cliente;
     strncpy(p.data, data, TAM_DATA - 1);
     p.data[TAM_DATA - 1] = '\0';
@@ -153,7 +169,7 @@ int pedido_salvar(int id_cliente, const char* data, const int* ids_produtos, con
 
     for (int i = 0; i < num_itens; i++) {
         ItemPedido ip = {0};
-        ip.id = csv_obter_proximo_id("itens_pedido.csv");
+        ip.id = csv_obter_proximo_id("database/itens_pedido.csv");
         ip.id_pedido = p.id;
         ip.id_produto = ids_produtos[i];
         ip.quantidade = quantidades[i];
@@ -169,5 +185,5 @@ int pedido_salvar(int id_cliente, const char* data, const int* ids_produtos, con
         if (csv_inserir_item_pedido(&ip) != 0) return -4;
     }
 
-    return 0;
+    return p.id;
 }
