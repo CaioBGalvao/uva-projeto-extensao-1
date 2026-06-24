@@ -25,7 +25,7 @@ void devolucao_menu_registrar(void) {
     limpar_tela();
     printf("\n--- MODULO DE DEVOLUCAO ---\n");
     printf("(Pressione Ctrl+D ou Ctrl+Z com campo vazio para cancelar)\n");
-    printf("(Use Ctrl+B para Busca Rapida a qualquer momento)\n\n");
+    printf("(Use '?' para Busca Rapida a qualquer momento)\n\n");
     char data_iso[64];
     obter_data_atual(data_iso, 0);
     char data_br_padrao[64];

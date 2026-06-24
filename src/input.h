@@ -15,7 +15,7 @@
 void limpar_tela(void);
 
 /**
- * Configura atalhos de teclado (Ctrl+B) para busca.
+ * Configura atalhos de teclado ('?') para busca.
  */
 void input_configurar_atalhos(void);
 

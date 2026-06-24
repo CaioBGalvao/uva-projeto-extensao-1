@@ -59,9 +59,9 @@ void produto_menu_cadastrar(void) {
     limpar_tela();
     printf("\n--- Cadastrar Produto ---\n");
     printf("(Pressione Ctrl+D ou Ctrl+Z com campo vazio para cancelar)\n");
-    printf("(Use Ctrl+B para Busca Rapida a qualquer momento)\n\n");
+    printf("(Use '?' para Busca Rapida a qualquer momento)\n\n");
 
-    // Pede o nome usando a utilidade de input (suporta Ctrl+D/Ctrl+Z e Ctrl+B)
+    // Pede o nome usando a utilidade de input (suporta Ctrl+D/Ctrl+Z e '?')
     if (ler_string("Digite o nome do produto: ", nome, sizeof(nome))) {
         // Pede o preço com validação de float
         if (ler_float("Digite o preco unitario (ex: 19.90): ", &preco)) {

@@ -7,3 +7,4 @@ tests/bin_*
 *.log
 *.txt
 *.csv
+*.exe

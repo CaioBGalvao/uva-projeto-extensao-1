@@ -30,7 +30,7 @@ void pedido_menu_registrar(void) {
     limpar_tela();
     printf("\n--- Registrar Pedido ---\n");
     printf("(Pressione Ctrl+D ou Ctrl+Z com campo vazio para cancelar)\n");
-    printf("(DICA: Pressione Ctrl+B para buscar clientes, produtos e pedidos)\n\n");
+    printf("(DICA: Digite '?' em qualquer campo para buscar clientes, produtos e pedidos)\n\n");
 
     // 1. Pergunta a data
     char data_iso[64];
@@ -113,8 +113,8 @@ void pedido_menu_registrar(void) {
 
         ids_produtos[num_itens] = id_produto;
         quantidades[num_itens] = qtd;
-        strncpy(nomes_produtos[num_itens], p.nome, MAX_NOME - 1);
-        nomes_produtos[num_itens][MAX_NOME - 1] = '\0';
+        strncpy(nomes_produtos[num_itens], p.nome, sizeof(nomes_produtos[num_itens]) - 1);
+        nomes_produtos[num_itens][sizeof(nomes_produtos[num_itens]) - 1] = '\0';
         precos_unitarios[num_itens] = p.preco;
         
         registrar_log("INTERMEDIARIO: Foi adicionado ao pedido o item %d ('%s') com valor unitario %.2f na quantidade %d.", id_produto, p.nome, p.preco, qtd);
