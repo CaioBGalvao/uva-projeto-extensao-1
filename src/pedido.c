@@ -1,3 +1,11 @@
+/**
+ * @file pedido.c
+ * @author Ana Silva (Dev 3)
+ * @brief Implementacao do modulo de Pedido.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,6 +19,10 @@
 #include "logger.h"
 
 // Interação com usuário para registrar um pedido
+/**
+ * @brief Executa a operacao de pedido_menu_registrar.
+ *
+ */
 void pedido_menu_registrar(void) {
     char data[TAM_DATA] = {0};
     int id_cliente = 0;
@@ -156,6 +168,16 @@ void pedido_menu_registrar(void) {
 }
 
 // Regra de negocio: persiste pedido e itens, garantindo ids encadeados
+/**
+ * @brief Executa a operacao de pedido_salvar.
+ *
+ * @param id_cliente Parametro de entrada.
+ * @param data Parametro de entrada.
+ * @param ids_produtos Parametro de entrada.
+ * @param quantidades Parametro de entrada.
+ * @param num_itens Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int pedido_salvar(int id_cliente, const char* data, const int* ids_produtos, const int* quantidades, int num_itens) {
     if (data == NULL || ids_produtos == NULL || quantidades == NULL || num_itens <= 0) return -1;
 

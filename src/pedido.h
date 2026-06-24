@@ -1,3 +1,11 @@
+/**
+ * @file pedido.h
+ * @author Ana Silva (Dev 3)
+ * @brief Interface do modulo de Pedido.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef PEDIDO_H
 #define PEDIDO_H
 

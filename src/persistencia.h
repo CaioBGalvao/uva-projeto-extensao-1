@@ -1,3 +1,11 @@
+/**
+ * @file persistencia.h
+ * @author Ana Silva (Dev 3)
+ * @brief Interface do modulo de Persistencia.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef PERSISTENCIA_H
 #define PERSISTENCIA_H
 

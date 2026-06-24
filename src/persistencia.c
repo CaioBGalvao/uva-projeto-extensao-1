@@ -1,3 +1,11 @@
+/**
+ * @file persistencia.c
+ * @author Ana Silva (Dev 3)
+ * @brief Implementacao do modulo de Persistencia (Banco de Dados em CSV).
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +23,13 @@
 #define HEADER_ITENS_PEDIDO "id;id_pedido;id_produto;quantidade;preco_unitario;valor_total\n"
 #define HEADER_DEVOLUCOES "id;id_item_pedido;data;contagem;taxa_cobrada\n"
 
+/**
+ * @brief Executa a operacao de garantir_cabecalho.
+ *
+ * @param f Parametro de entrada.
+ * @param cabecalho Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void garantir_cabecalho(FILE* f, const char* cabecalho) {
     long pos = ftell(f);
     fseek(f, 0, SEEK_END);
@@ -29,6 +44,13 @@ typedef struct {
     int count;
 } Metadata;
 
+/**
+ * @brief Executa a operacao de obter_nome_meta.
+ *
+ * @param arquivo_csv Parametro de entrada.
+ * @param arquivo_meta Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void obter_nome_meta(const char* arquivo_csv, char* arquivo_meta) {
     const char* basename = strrchr(arquivo_csv, '/');
     if (basename) basename++; // Pula o '/'
@@ -36,6 +58,13 @@ static void obter_nome_meta(const char* arquivo_csv, char* arquivo_meta) {
     sprintf(arquivo_meta, "metadata/%s.meta", basename);
 }
 
+/**
+ * @brief Executa a operacao de ler_metadados.
+ *
+ * @param arquivo_csv Parametro de entrada.
+ * @param meta Parametro de entrada.
+ * @return static int Retorno da operacao.
+ */
 static int ler_metadados(const char* arquivo_csv, Metadata* meta) {
     char arquivo_meta[256];
     obter_nome_meta(arquivo_csv, arquivo_meta);
@@ -49,6 +78,13 @@ static int ler_metadados(const char* arquivo_csv, Metadata* meta) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de salvar_metadados.
+ *
+ * @param arquivo_csv Parametro de entrada.
+ * @param meta Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void salvar_metadados(const char* arquivo_csv, const Metadata* meta) {
     char arquivo_meta[256];
     obter_nome_meta(arquivo_csv, arquivo_meta);
@@ -62,6 +98,12 @@ static void salvar_metadados(const char* arquivo_csv, const Metadata* meta) {
 // Protótipo para o helper que atualiza ao inserir
 static void atualizar_metadados_insercao(const char* arquivo_csv, int novo_id);
 
+/**
+ * @brief Executa a operacao de csv_obter_proximo_id.
+ *
+ * @param arquivo Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_obter_proximo_id(const char* arquivo) {
     Metadata meta;
     if (ler_metadados(arquivo, &meta) == 0) {
@@ -94,6 +136,13 @@ int csv_obter_proximo_id(const char* arquivo) {
     return meta.max_id + 1;
 }
 
+/**
+ * @brief Executa a operacao de atualizar_metadados_insercao.
+ *
+ * @param arquivo_csv Parametro de entrada.
+ * @param novo_id Parametro de entrada.
+ * @return static void Retorno da operacao.
+ */
 static void atualizar_metadados_insercao(const char* arquivo_csv, int novo_id) {
     Metadata meta;
     if (ler_metadados(arquivo_csv, &meta) == 0) {
@@ -107,6 +156,12 @@ static void atualizar_metadados_insercao(const char* arquivo_csv, int novo_id) {
 }
 
 // Cliente
+/**
+ * @brief Executa a operacao de csv_inserir_cliente.
+ *
+ * @param c Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_inserir_cliente(const Cliente* c) {
     FILE* f = fopen(ARQ_CLIENTES, "a+");
     if (!f) return -1;
@@ -117,6 +172,13 @@ int csv_inserir_cliente(const Cliente* c) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_buscar_cliente_por_id.
+ *
+ * @param id Parametro de entrada.
+ * @param resultado Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_buscar_cliente_por_id(int id, Cliente* resultado) {
     FILE* f = fopen(ARQ_CLIENTES, "r");
     if (!f) return -1;
@@ -143,6 +205,14 @@ int csv_buscar_cliente_por_id(int id, Cliente* resultado) {
     return -1;
 }
 
+/**
+ * @brief Executa a operacao de csv_ler_todos_clientes.
+ *
+ * @param resultados Parametro de entrada.
+ * @param max_resultados Parametro de entrada.
+ * @param qtd_encontrada Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_ler_todos_clientes(Cliente* resultados, int max_resultados, int* qtd_encontrada) {
     *qtd_encontrada = 0;
     FILE* f = fopen(ARQ_CLIENTES, "r");
@@ -166,6 +236,12 @@ int csv_ler_todos_clientes(Cliente* resultados, int max_resultados, int* qtd_enc
 }
 
 // Produto
+/**
+ * @brief Executa a operacao de csv_inserir_produto.
+ *
+ * @param p Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_inserir_produto(const Produto* p) {
     FILE* f = fopen(ARQ_PRODUTOS, "a+");
     if (!f) return -1;
@@ -176,6 +252,13 @@ int csv_inserir_produto(const Produto* p) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_buscar_produto_por_id.
+ *
+ * @param id Parametro de entrada.
+ * @param resultado Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_buscar_produto_por_id(int id, Produto* resultado) {
     FILE* f = fopen(ARQ_PRODUTOS, "r");
     if (!f) return -1;
@@ -204,6 +287,14 @@ int csv_buscar_produto_por_id(int id, Produto* resultado) {
     return -1;
 }
 
+/**
+ * @brief Executa a operacao de csv_ler_todos_produtos.
+ *
+ * @param resultados Parametro de entrada.
+ * @param max_resultados Parametro de entrada.
+ * @param qtd_encontrada Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_ler_todos_produtos(Produto* resultados, int max_resultados, int* qtd_encontrada) {
     *qtd_encontrada = 0;
     FILE* f = fopen(ARQ_PRODUTOS, "r");
@@ -227,6 +318,12 @@ int csv_ler_todos_produtos(Produto* resultados, int max_resultados, int* qtd_enc
 }
 
 // Pedido
+/**
+ * @brief Executa a operacao de csv_inserir_pedido.
+ *
+ * @param p Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_inserir_pedido(const Pedido* p) {
     FILE* f = fopen(ARQ_PEDIDOS, "a+");
     if (!f) return -1;
@@ -237,6 +334,12 @@ int csv_inserir_pedido(const Pedido* p) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_inserir_item_pedido.
+ *
+ * @param ip Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_inserir_item_pedido(const ItemPedido* ip) {
     FILE* f = fopen(ARQ_ITENS_PEDIDO, "a+");
     if (!f) return -1;
@@ -247,6 +350,15 @@ int csv_inserir_item_pedido(const ItemPedido* ip) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_listar_itens_por_pedido.
+ *
+ * @param id_pedido Parametro de entrada.
+ * @param resultados Parametro de entrada.
+ * @param max_resultados Parametro de entrada.
+ * @param qtd_encontrada Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_listar_itens_por_pedido(int id_pedido, ItemPedido* resultados, int max_resultados, int* qtd_encontrada) {
     *qtd_encontrada = 0;
     FILE* f = fopen(ARQ_ITENS_PEDIDO, "r");
@@ -271,6 +383,14 @@ int csv_listar_itens_por_pedido(int id_pedido, ItemPedido* resultados, int max_r
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_ler_todos_pedidos.
+ *
+ * @param resultados Parametro de entrada.
+ * @param max_resultados Parametro de entrada.
+ * @param qtd_encontrada Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_ler_todos_pedidos(Pedido* resultados, int max_resultados, int* qtd_encontrada) {
     *qtd_encontrada = 0;
     FILE* f = fopen(ARQ_PEDIDOS, "r");
@@ -293,6 +413,15 @@ int csv_ler_todos_pedidos(Pedido* resultados, int max_resultados, int* qtd_encon
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de calcular_faturamento_agregado.
+ *
+ * @param prefixo_data Parametro de entrada.
+ * @param out_pedidos Parametro de entrada.
+ * @param out_faturado Parametro de entrada.
+ * @param totais_mes[12] Parametro de entrada.
+ * @return static int Retorno da operacao.
+ */
 static int calcular_faturamento_agregado(const char* prefixo_data, int* out_pedidos, float* out_faturado, float totais_mes[12]) {
     *out_pedidos = 0;
     *out_faturado = 0.0f;
@@ -362,19 +491,50 @@ static int calcular_faturamento_agregado(const char* prefixo_data, int* out_pedi
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_faturamento_diario.
+ *
+ * @param data_iso Parametro de entrada.
+ * @param out_pedidos Parametro de entrada.
+ * @param out_faturado Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_faturamento_diario(const char* data_iso, int* out_pedidos, float* out_faturado) {
     return calcular_faturamento_agregado(data_iso, out_pedidos, out_faturado, NULL);
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_faturamento_mensal.
+ *
+ * @param ano_mes_iso Parametro de entrada.
+ * @param out_pedidos Parametro de entrada.
+ * @param out_faturado Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_faturamento_mensal(const char* ano_mes_iso, int* out_pedidos, float* out_faturado) {
     return calcular_faturamento_agregado(ano_mes_iso, out_pedidos, out_faturado, NULL);
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_faturamento_anual.
+ *
+ * @param ano_iso Parametro de entrada.
+ * @param out_pedidos Parametro de entrada.
+ * @param out_faturado_total Parametro de entrada.
+ * @param totais_mes[12] Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_faturamento_anual(const char* ano_iso, int* out_pedidos, float* out_faturado_total, float totais_mes[12]) {
     return calcular_faturamento_agregado(ano_iso, out_pedidos, out_faturado_total, totais_mes);
 }
 
 // Devolução
+/**
+ * @brief Executa a operacao de csv_inserir_devolucao.
+ *
+ * @param d Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_inserir_devolucao(const Devolucao* d) {
     FILE* f = fopen(ARQ_DEVOLUCOES, "a+");
     if (!f) return -1;
@@ -385,6 +545,12 @@ int csv_inserir_devolucao(const Devolucao* d) {
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_contar_devolucoes_item.
+ *
+ * @param id_item_pedido Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_contar_devolucoes_item(int id_item_pedido) {
     FILE* f = fopen(ARQ_DEVOLUCOES, "r");
     if (!f) return 0; // se o arquivo não existe, há 0 devoluções
@@ -411,6 +577,14 @@ int csv_contar_devolucoes_item(int id_item_pedido) {
     return count;
 }
 
+/**
+ * @brief Executa a operacao de calcular_taxas_devolucao_agregado.
+ *
+ * @param prefixo_data Parametro de entrada.
+ * @param out_taxas Parametro de entrada.
+ * @param totais_mes[12] Parametro de entrada.
+ * @return static int Retorno da operacao.
+ */
 static int calcular_taxas_devolucao_agregado(const char* prefixo_data, float* out_taxas, float totais_mes[12]) {
     *out_taxas = 0.0f;
     if (totais_mes) {
@@ -447,14 +621,36 @@ static int calcular_taxas_devolucao_agregado(const char* prefixo_data, float* ou
     return 0;
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_taxas_devolucao_diario.
+ *
+ * @param data_iso Parametro de entrada.
+ * @param out_taxas Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_taxas_devolucao_diario(const char* data_iso, float* out_taxas) {
     return calcular_taxas_devolucao_agregado(data_iso, out_taxas, NULL);
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_taxas_devolucao_mensal.
+ *
+ * @param ano_mes_iso Parametro de entrada.
+ * @param out_taxas Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_taxas_devolucao_mensal(const char* ano_mes_iso, float* out_taxas) {
     return calcular_taxas_devolucao_agregado(ano_mes_iso, out_taxas, NULL);
 }
 
+/**
+ * @brief Executa a operacao de csv_calcular_taxas_devolucao_anual.
+ *
+ * @param ano_iso Parametro de entrada.
+ * @param out_taxas_total Parametro de entrada.
+ * @param totais_mes[12] Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int csv_calcular_taxas_devolucao_anual(const char* ano_iso, float* out_taxas_total, float totais_mes[12]) {
     return calcular_taxas_devolucao_agregado(ano_iso, out_taxas_total, totais_mes);
 }

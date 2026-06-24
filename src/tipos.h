@@ -1,3 +1,11 @@
+/**
+ * @file tipos.h
+ * @author Ana Silva (Dev 3)
+ * @brief Definicao das estruturas de dados globais.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef TIPOS_H
 #define TIPOS_H
 
