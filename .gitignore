@@ -6,3 +6,4 @@ tests/bin_*
 .meta
 .log
 .txt
+.csv
