@@ -1,3 +1,11 @@
+/**
+ * @file devolucao.h
+ * @author Guilherme Brazil (Dev 4)
+ * @brief Interface do modulo de Devolucao.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #ifndef DEVOLUCAO_H
 #define DEVOLUCAO_H
 

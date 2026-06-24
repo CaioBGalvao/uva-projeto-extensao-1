@@ -1,3 +1,11 @@
+/**
+ * @file devolucao.c
+ * @author Guilherme Brazil (Dev 4)
+ * @brief Implementacao do modulo de Devolucao e calculo de taxas.
+ * 
+ * Este arquivo foi documentado conforme o padrao CDoc/Doxygen.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "devolucao.h"
@@ -6,6 +14,10 @@
 #include "input.h"
 #include "logger.h"
 
+/**
+ * @brief Executa a operacao de devolucao_menu_registrar.
+ *
+ */
 void devolucao_menu_registrar(void) {
     char data[TAM_DATA];
     int id_pedido;
@@ -85,6 +97,15 @@ void devolucao_menu_registrar(void) {
     }
 }
 
+/**
+ * @brief Executa a operacao de devolucao_processar.
+ *
+ * @param id_pedido Parametro de entrada.
+ * @param id_produto Parametro de entrada.
+ * @param data Parametro de entrada.
+ * @param out_recibo Parametro de entrada.
+ * @return int Retorno da operacao.
+ */
 int devolucao_processar(int id_pedido, int id_produto, const char* data, Devolucao* out_recibo) {
     if (id_pedido <= 0 || id_produto <= 0 || data == NULL || out_recibo == NULL) return -1;
 
