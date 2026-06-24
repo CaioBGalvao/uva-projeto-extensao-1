@@ -22,31 +22,36 @@ Toda a solução técnica foi exigida na linguagem **C**, utilizando structs, ve
 A equipe de 5 desenvolvedores adotou uma segmentação de responsabilidade, a fim de mitigar conflitos e garantir especialização nos subcomponentes do software.
 
 ### Dev 1: Gabriel Bittencourt (Módulo Cliente)
+
 - **Atuação:** Responsável pelo gerenciamento do cadastro dos clientes (`cliente.c`, `cliente.h`).
-- **Principais Contribuições:** 
+- **Principais Contribuições:**
   - Criação da interface interativa de cadastro.
   - Validação de regras e persistência de dados do cliente, isolando a regra de negócio num contrato previsível e limpo para o front-end de terminal.
 
 ### Dev 2: Wallace Calisto (Módulo Produto)
+
 - **Atuação:** Responsável pelo core de Produtos (`produto.c`, `produto.h`).
-- **Principais Contribuições:** 
+- **Principais Contribuições:**
   - Desenvolvimento da lógica interativa de cadastro de novos produtos no estoque.
   - Implementação de validações lógicas (preços positivos obrigatórios e prevenção contra inserções nulas).
   - Encaminhamento da struct preenchida para a camada de armazenamento.
 
 ### Dev 3: Ana Silva (Módulo Pedido e Banco de Dados)
+
 - **Atuação:** Estruturação dos fluxos de compras e das operações do File System (banco de dados manual em CSV) através dos arquivos `pedido.c`, `persistencia.c` e `tipos.h`.
 - **Principais Contribuições:**
   - Desenvolvimento do motor de carrinho de compras em memória usando vetores estáticos antes de realizar a gravação definitiva, garantindo a integridade dos dados (`ACID` simplificado).
   - Criação dos CRUDs primitivos para arquivos CSV simulando tabelas em um RDBMS (`csv_inserir_*`, `csv_buscar_*`, `csv_obter_proximo_id`).
 
 ### Dev 4: Guilherme Brazil (Módulo de Devoluções e Regras)
+
 - **Atuação:** Responsável pelas regras tributárias estipuladas no escopo, implementadas em `devolucao.c`.
 - **Principais Contribuições:**
   - Lógica para calcular a incidência da taxa de R$ 20,00 a partir da segunda devolução do mesmo item de um pedido.
   - Interface no terminal para registrar a devolução com busca de metadados do pedido e auditoria da quantidade em devolução.
 
 ### Dev 5: Caio Galvão (Lead - Core, Relatórios e UX)
+
 - **Atuação:** Relatórios, Input avançado e Utilitários (`relatorio.c`, `input.c`, `logger.c`, `lookup.c`, `main.c`).
 - **Principais Contribuições:**
   - Criação dos algoritmos para relatórios (Diário, Mensal, Anual) incluindo o uso de `qsort()` para listar faturamentos decrescentes e mesclar taxas de devolução aos saldos contábeis.
