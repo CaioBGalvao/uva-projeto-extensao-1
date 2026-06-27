@@ -23,17 +23,20 @@ int csv_obter_proximo_id(const char* arquivo);
 int csv_inserir_cliente(const Cliente* c);
 int csv_buscar_cliente_por_id(int id, Cliente* resultado);
 int csv_ler_todos_clientes(Cliente* resultados, int max_resultados, int* qtd_encontrada);
+int csv_ler_pagina_clientes(Cliente* resultados, int page_size, int page, int* qtd_lida, int* total_registros);
 
 // Entidade: Produto
 int csv_inserir_produto(const Produto* p);
 int csv_buscar_produto_por_id(int id, Produto* resultado);
 int csv_ler_todos_produtos(Produto* resultados, int max_resultados, int* qtd_encontrada);
+int csv_ler_pagina_produtos(Produto* resultados, int page_size, int page, int* qtd_lida, int* total_registros);
 
 // Entidade: Pedido e ItemPedido
 int csv_inserir_pedido(const Pedido* p);
 int csv_inserir_item_pedido(const ItemPedido* ip);
 int csv_listar_itens_por_pedido(int id_pedido, ItemPedido* resultados, int max_resultados, int* qtd_encontrada);
 int csv_ler_todos_pedidos(Pedido* resultados, int max_resultados, int* qtd_encontrada);
+int csv_ler_pagina_pedidos(Pedido* resultados, int page_size, int page, int* qtd_lida, int* total_registros);
 int csv_calcular_faturamento_diario(const char* data_iso, int* out_pedidos, float* out_faturado);
 int csv_calcular_faturamento_mensal(const char* ano_mes_iso, int* out_pedidos, float* out_faturado);
 int csv_calcular_faturamento_anual(const char* ano_iso, int* out_pedidos, float* out_faturado_total, float totais_mes[12]);

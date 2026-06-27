@@ -139,6 +139,12 @@ int ler_float(const char *prompt, float *valor) {
             ic_free(input);
             continue;
         }
+        // Permite o uso de vírgula como separador decimal
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (input[i] == ',') {
+                input[i] = '.';
+            }
+        }
         
         int ret = sscanf(input, "%f", valor);
         ic_free(input);

@@ -10,7 +10,7 @@
 #define TIPOS_H
 
 #define MAX_PEDIDOS_DIA 9999
-#define MAX_ITENS_PEDIDO 9999
+#define MAX_ITENS_PEDIDO 100
 #define MAX_QTD_ITEM 9999
 #define MAX_NOME 255
 #define TAM_DATA 11 // Formato: AAAA-MM-DD + \0

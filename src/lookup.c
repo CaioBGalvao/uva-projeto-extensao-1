@@ -19,26 +19,22 @@
 #define PAGE_SIZE_PEDIDOS 10
 
 /**
- * @brief Executa a operacao de mostrar_pagina_clientes.
+ * @brief Exibe uma pagina de clientes ja carregada.
  *
- * @param clientes Parametro de entrada.
- * @param total Parametro de entrada.
- * @param page Parametro de entrada.
- * @return static void Retorno da operacao.
+ * @param clientes Array com os clientes da pagina atual.
+ * @param count Quantidade de clientes no array.
+ * @param page Indice da pagina atual (0-based).
+ * @param total_pages Total de paginas disponiveis.
  */
-static void mostrar_pagina_clientes(Cliente* clientes, int total, int page) {
+static void mostrar_pagina_clientes(Cliente* clientes, int count, int page, int total_pages) {
     limpar_tela();
-    int start = page * PAGE_SIZE;
-    int end = start + PAGE_SIZE;
-    if (end > total) end = total;
-
-    printf("\n--- Busca de Clientes (Pagina %d/%d) ---\n", page + 1, (total + PAGE_SIZE - 1) / PAGE_SIZE == 0 ? 1 : (total + PAGE_SIZE - 1) / PAGE_SIZE);
-    if (total == 0) {
+    printf("\n--- Busca de Clientes (Pagina %d/%d) ---\n", page + 1, total_pages);
+    if (count == 0) {
         printf("Nenhum cliente cadastrado.\n");
     } else {
         printf("%-5s | %-30s\n", "ID", "Nome");
         printf("----------------------------------------\n");
-        for (int i = start; i < end; i++) {
+        for (int i = 0; i < count; i++) {
             printf("%-5d | %s\n", clientes[i].id, clientes[i].nome);
         }
     }
@@ -46,26 +42,22 @@ static void mostrar_pagina_clientes(Cliente* clientes, int total, int page) {
 }
 
 /**
- * @brief Executa a operacao de mostrar_pagina_produtos.
+ * @brief Exibe uma pagina de produtos ja carregada.
  *
- * @param produtos Parametro de entrada.
- * @param total Parametro de entrada.
- * @param page Parametro de entrada.
- * @return static void Retorno da operacao.
+ * @param produtos Array com os produtos da pagina atual.
+ * @param count Quantidade de produtos no array.
+ * @param page Indice da pagina atual (0-based).
+ * @param total_pages Total de paginas disponiveis.
  */
-static void mostrar_pagina_produtos(Produto* produtos, int total, int page) {
+static void mostrar_pagina_produtos(Produto* produtos, int count, int page, int total_pages) {
     limpar_tela();
-    int start = page * PAGE_SIZE;
-    int end = start + PAGE_SIZE;
-    if (end > total) end = total;
-
-    printf("\n--- Busca de Produtos (Pagina %d/%d) ---\n", page + 1, (total + PAGE_SIZE - 1) / PAGE_SIZE == 0 ? 1 : (total + PAGE_SIZE - 1) / PAGE_SIZE);
-    if (total == 0) {
+    printf("\n--- Busca de Produtos (Pagina %d/%d) ---\n", page + 1, total_pages);
+    if (count == 0) {
         printf("Nenhum produto cadastrado.\n");
     } else {
         printf("%-5s | %-30s | %-10s\n", "ID", "Nome", "Preco");
         printf("----------------------------------------------------\n");
-        for (int i = start; i < end; i++) {
+        for (int i = 0; i < count; i++) {
             printf("%-5d | %-30s | %.2f\n", produtos[i].id, produtos[i].nome, produtos[i].preco);
         }
     }
@@ -73,24 +65,20 @@ static void mostrar_pagina_produtos(Produto* produtos, int total, int page) {
 }
 
 /**
- * @brief Executa a operacao de mostrar_pagina_pedidos.
+ * @brief Exibe uma pagina de pedidos ja carregada, incluindo itens.
  *
- * @param pedidos Parametro de entrada.
- * @param total Parametro de entrada.
- * @param page Parametro de entrada.
- * @return static void Retorno da operacao.
+ * @param pedidos Array com os pedidos da pagina atual.
+ * @param count Quantidade de pedidos no array.
+ * @param page Indice da pagina atual (0-based).
+ * @param total_pages Total de paginas disponiveis.
  */
-static void mostrar_pagina_pedidos(Pedido* pedidos, int total, int page) {
+static void mostrar_pagina_pedidos(Pedido* pedidos, int count, int page, int total_pages) {
     limpar_tela();
-    int start = page * PAGE_SIZE_PEDIDOS;
-    int end = start + PAGE_SIZE_PEDIDOS;
-    if (end > total) end = total;
-
-    printf("\n--- Busca de Pedidos (Pagina %d/%d) ---\n", page + 1, (total + PAGE_SIZE_PEDIDOS - 1) / PAGE_SIZE_PEDIDOS == 0 ? 1 : (total + PAGE_SIZE_PEDIDOS - 1) / PAGE_SIZE_PEDIDOS);
-    if (total == 0) {
+    printf("\n--- Busca de Pedidos (Pagina %d/%d) ---\n", page + 1, total_pages);
+    if (count == 0) {
         printf("Nenhum pedido cadastrado.\n");
     } else {
-        for (int i = start; i < end; i++) {
+        for (int i = 0; i < count; i++) {
             char data_br[11];
             converter_data_iso_para_br(pedidos[i].data, data_br, 0);
             printf("\n====== Recibo de Venda ======\n");
@@ -122,22 +110,24 @@ static void mostrar_pagina_pedidos(Pedido* pedidos, int total, int page) {
 }
 
 /**
- * @brief Executa a operacao de loop_clientes.
+ * @brief Loop de navegacao paginada de clientes (stream por pagina).
  *
- * @return static void Retorno da operacao.
+ * Carrega apenas PAGE_SIZE clientes por vez na stack, descartando ao trocar de pagina.
  */
 static void loop_clientes(void) {
-    Cliente clientes[1000];
-    int total = 0;
-    csv_ler_todos_clientes(clientes, 1000, &total);
-
     int page = 0;
-    int max_page = (total + PAGE_SIZE - 1) / PAGE_SIZE;
-    if (max_page == 0) max_page = 1;
-
     char cmd[32];
+
     while (1) {
-        mostrar_pagina_clientes(clientes, total, page);
+        Cliente clientes[PAGE_SIZE];
+        int qtd_lida = 0;
+        int total = 0;
+        csv_ler_pagina_clientes(clientes, PAGE_SIZE, page, &qtd_lida, &total);
+
+        int max_page = (total + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (max_page == 0) max_page = 1;
+
+        mostrar_pagina_clientes(clientes, qtd_lida, page, max_page);
         printf("\nDigite: 'prox' (proxima), 'ant' (anterior), 'sair': ");
         if (scanf("%31s", cmd) != 1) break;
         int c; while ((c = getchar()) != '\n' && c != EOF); // Flush newline
@@ -148,22 +138,24 @@ static void loop_clientes(void) {
 }
 
 /**
- * @brief Executa a operacao de loop_produtos.
+ * @brief Loop de navegacao paginada de produtos (stream por pagina).
  *
- * @return static void Retorno da operacao.
+ * Carrega apenas PAGE_SIZE produtos por vez na stack, descartando ao trocar de pagina.
  */
 static void loop_produtos(void) {
-    Produto produtos[1000];
-    int total = 0;
-    csv_ler_todos_produtos(produtos, 1000, &total);
-
     int page = 0;
-    int max_page = (total + PAGE_SIZE - 1) / PAGE_SIZE;
-    if (max_page == 0) max_page = 1;
-
     char cmd[32];
+
     while (1) {
-        mostrar_pagina_produtos(produtos, total, page);
+        Produto produtos[PAGE_SIZE];
+        int qtd_lida = 0;
+        int total = 0;
+        csv_ler_pagina_produtos(produtos, PAGE_SIZE, page, &qtd_lida, &total);
+
+        int max_page = (total + PAGE_SIZE - 1) / PAGE_SIZE;
+        if (max_page == 0) max_page = 1;
+
+        mostrar_pagina_produtos(produtos, qtd_lida, page, max_page);
         printf("\nDigite: 'prox' (proxima), 'ant' (anterior), 'sair': ");
         if (scanf("%31s", cmd) != 1) break;
         int c; while ((c = getchar()) != '\n' && c != EOF); // Flush newline
@@ -174,22 +166,24 @@ static void loop_produtos(void) {
 }
 
 /**
- * @brief Executa a operacao de loop_pedidos.
+ * @brief Loop de navegacao paginada de pedidos (stream por pagina).
  *
- * @return static void Retorno da operacao.
+ * Carrega apenas PAGE_SIZE_PEDIDOS pedidos por vez na stack, descartando ao trocar de pagina.
  */
 static void loop_pedidos(void) {
-    Pedido pedidos[1000];
-    int total = 0;
-    csv_ler_todos_pedidos(pedidos, 1000, &total);
-
     int page = 0;
-    int max_page = (total + PAGE_SIZE_PEDIDOS - 1) / PAGE_SIZE_PEDIDOS;
-    if (max_page == 0) max_page = 1;
-
     char cmd[32];
+
     while (1) {
-        mostrar_pagina_pedidos(pedidos, total, page);
+        Pedido pedidos[PAGE_SIZE_PEDIDOS];
+        int qtd_lida = 0;
+        int total = 0;
+        csv_ler_pagina_pedidos(pedidos, PAGE_SIZE_PEDIDOS, page, &qtd_lida, &total);
+
+        int max_page = (total + PAGE_SIZE_PEDIDOS - 1) / PAGE_SIZE_PEDIDOS;
+        if (max_page == 0) max_page = 1;
+
+        mostrar_pagina_pedidos(pedidos, qtd_lida, page, max_page);
         printf("\nDigite: 'prox' (proxima), 'ant' (anterior), 'sair': ");
         if (scanf("%31s", cmd) != 1) break;
         int c; while ((c = getchar()) != '\n' && c != EOF); // Flush newline

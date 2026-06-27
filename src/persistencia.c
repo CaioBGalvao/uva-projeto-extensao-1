@@ -252,6 +252,46 @@ int csv_ler_todos_clientes(Cliente* resultados, int max_resultados, int* qtd_enc
     return 0;
 }
 
+/**
+ * @brief Le uma pagina de clientes do CSV.
+ *
+ * @param resultados Buffer para receber os clientes da pagina.
+ * @param page_size Quantidade de registros por pagina.
+ * @param page Indice da pagina (0-based).
+ * @param qtd_lida Ponteiro para receber quantos registros foram lidos na pagina.
+ * @param total_registros Ponteiro para receber o total de registros no arquivo.
+ * @return int 0 para sucesso, -1 para erro.
+ */
+int csv_ler_pagina_clientes(Cliente* resultados, int page_size, int page, int* qtd_lida, int* total_registros) {
+    *qtd_lida = 0;
+    *total_registros = 0;
+    FILE* f = fopen(ARQ_CLIENTES, "r");
+    if (!f) return -1;
+
+    char linha[1024];
+    if (!fgets(linha, sizeof(linha), f)) {
+        fclose(f);
+        return 0;
+    }
+
+    int skip = page * page_size;
+    int count = 0;
+
+    while (fgets(linha, sizeof(linha), f)) {
+        Cliente c = {0};
+        if (sscanf(linha, "%d;%254[^\n]", &c.id, c.nome) >= 1) {
+            if (count >= skip && *qtd_lida < page_size) {
+                resultados[*qtd_lida] = c;
+                (*qtd_lida)++;
+            }
+            count++;
+        }
+    }
+    *total_registros = count;
+    fclose(f);
+    return 0;
+}
+
 // Produto
 /**
  * @brief Executa a operacao de csv_inserir_produto.
@@ -330,6 +370,46 @@ int csv_ler_todos_produtos(Produto* resultados, int max_resultados, int* qtd_enc
             (*qtd_encontrada)++;
         }
     }
+    fclose(f);
+    return 0;
+}
+
+/**
+ * @brief Le uma pagina de produtos do CSV.
+ *
+ * @param resultados Buffer para receber os produtos da pagina.
+ * @param page_size Quantidade de registros por pagina.
+ * @param page Indice da pagina (0-based).
+ * @param qtd_lida Ponteiro para receber quantos registros foram lidos na pagina.
+ * @param total_registros Ponteiro para receber o total de registros no arquivo.
+ * @return int 0 para sucesso, -1 para erro.
+ */
+int csv_ler_pagina_produtos(Produto* resultados, int page_size, int page, int* qtd_lida, int* total_registros) {
+    *qtd_lida = 0;
+    *total_registros = 0;
+    FILE* f = fopen(ARQ_PRODUTOS, "r");
+    if (!f) return -1;
+
+    char linha[1024];
+    if (!fgets(linha, sizeof(linha), f)) {
+        fclose(f);
+        return 0;
+    }
+
+    int skip = page * page_size;
+    int count = 0;
+
+    while (fgets(linha, sizeof(linha), f)) {
+        Produto p = {0};
+        if (sscanf(linha, "%d;%254[^;];%f", &p.id, p.nome, &p.preco) == 3) {
+            if (count >= skip && *qtd_lida < page_size) {
+                resultados[*qtd_lida] = p;
+                (*qtd_lida)++;
+            }
+            count++;
+        }
+    }
+    *total_registros = count;
     fclose(f);
     return 0;
 }
@@ -426,6 +506,46 @@ int csv_ler_todos_pedidos(Pedido* resultados, int max_resultados, int* qtd_encon
             (*qtd_encontrada)++;
         }
     }
+    fclose(f);
+    return 0;
+}
+
+/**
+ * @brief Le uma pagina de pedidos do CSV.
+ *
+ * @param resultados Buffer para receber os pedidos da pagina.
+ * @param page_size Quantidade de registros por pagina.
+ * @param page Indice da pagina (0-based).
+ * @param qtd_lida Ponteiro para receber quantos registros foram lidos na pagina.
+ * @param total_registros Ponteiro para receber o total de registros no arquivo.
+ * @return int 0 para sucesso, -1 para erro.
+ */
+int csv_ler_pagina_pedidos(Pedido* resultados, int page_size, int page, int* qtd_lida, int* total_registros) {
+    *qtd_lida = 0;
+    *total_registros = 0;
+    FILE* f = fopen(ARQ_PEDIDOS, "r");
+    if (!f) return -1;
+
+    char linha[1024];
+    if (!fgets(linha, sizeof(linha), f)) {
+        fclose(f);
+        return 0;
+    }
+
+    int skip = page * page_size;
+    int count = 0;
+
+    while (fgets(linha, sizeof(linha), f)) {
+        Pedido p = {0};
+        if (sscanf(linha, "%d;%d;%10[^\n]", &p.id, &p.id_cliente, p.data) >= 2) {
+            if (count >= skip && *qtd_lida < page_size) {
+                resultados[*qtd_lida] = p;
+                (*qtd_lida)++;
+            }
+            count++;
+        }
+    }
+    *total_registros = count;
     fclose(f);
     return 0;
 }
