@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- markdownlint-disable MD041 MD033 -->
+<style>
+  @page {
+    size: A4;
+    margin: 3cm 2cm 2cm 3cm;
+  }
+  body {
+    font-family: "Arial", sans-serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    text-align: justify;
+    color: black;
+  }
+  .capa, .folha-rosto {
+    text-align: center;
+    height: calc(100vh - 5.5cm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+  .instituicao {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 3cm;
+  }
+  .titulo, .autores, .local-data {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .titulo {
+    font-size: 14pt;
+    margin: auto 0;
+  }
+  .nota {
+    text-align: justify;
+    margin-left: 50%;
+    font-size: 10pt;
+    line-height: 1.0;
+    margin-bottom: 2cm;
+    font-weight: normal;
+    text-transform: none;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Arial", sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    text-transform: uppercase;
+  }
+  p {
+    text-indent: 1.25cm;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  /* Remove paragraph indent for images */
+  p:has(img) {
+    text-indent: 0;
+    text-align: center;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  /* References */
+  .referencias p {
+    text-indent: 0;
+    text-align: left;
+    margin-bottom: 1.5em; /* 1 blank line between references */
+  }
+</style><div class="capa">
+  <div class="instituicao">UNIVERSIDADE VEIGA DE ALMEIDA<br>Curso de Ciência da Computação</div>
+  <div class="autores">
+    Ana Beatriz da Silva Pinto - 1250109558<br>
+    Gabriel Bittencourt - 1250111508<br>
+    Guilherme Brazil - 1250203978<br>
+    Wallace Calisto - 1250115639<br>
+    Caio Barbosa Galvão - 1250100534
+  </div>
+  <div class="titulo">Relatório das Atividades de Extensão</div>
+  <div class="local-data">Rio de Janeiro/RJ<br>2026</div>
+</div><div class="folha-rosto">
+  <div class="autores">
+    Ana Beatriz da Silva Pinto - 1250109558<br>
+    Gabriel Bittencourt - 1250111508<br>
+    Guilherme Brazil - 1250203978<br>
+    Wallace Calisto - 1250115639<br>
+    Caio Barbosa Galvão - 1250100534
+  </div>
+  <div class="titulo">Relatório das Atividades de Extensão</div>
+  <div class="nota">Relatório das Atividades de Extensão para cumprimento do componente curricular do Curso de Ciência da Computação da Universidade Veiga de Almeida.<br><br>Orientador: Camilla Lobo Paulino.</div>
+  <div class="local-data">Rio de Janeiro/RJ<br>2026</div>
+</div><h1>RESUMO</h1>
+<p>O presente relatório descreve o desenvolvimento do Projeto de Extensão II da disciplina de Algoritmos e Laboratório de Programação, que consistiu na criação de um sistema em linguagem C para controle de vendas de uma loja de varejo. O objetivo foi aplicar conhecimentos de programação estruturada para automatizar o registro de produtos, clientes e vendas, além de gerar relatórios gerenciais. O trabalho foi dividido entre os integrantes via Git: Gabriel desenvolveu a estrutura e cadastros, Wallace implementou os cálculos, Ana Beatriz criou os relatórios e desafios, Guilherme elaborou a ordenação e Caio realizou a integração e testes.</p>
+<p>O projeto relaciona-se com o ODS 8 da Agenda 2030 ao promover modernização tecnológica e apoio ao empreendedorismo em micro e pequenas empresas. Como produto final, entregou-se um software funcional capaz de processar 50 vendas diárias e emitir relatórios diário, mensal e anual com ranking de faturamento. A experiência permitiu consolidar conceitos de <code>struct</code>, <code>array</code>, funções e ordenação, além de desenvolver habilidades de trabalho colaborativo com versionamento.</p>
+<h1>INTRODUÇÃO</h1>
+<p>O tema deste Projeto de Extensão aborda a informatização de processos em pequenos comércios por meio do desenvolvimento de software. A estratégia metodológica adotada foi a programação modular em linguagem C, e com divisão de tarefas. A justificativa do projeto reside na necessidade de micro e pequenos varejistas terem acesso a ferramentas de gestão simples e eficientes, visto que muitos ainda operam com controles manuais sujeitos a erros. A relevância acadêmica está na aplicação prática de conteúdos como <code>struct</code>, <code>array</code>, funções e algoritmos de ordenação. O objetivo geral foi desenvolver um sistema funcional para registro de vendas diárias. Os objetivos específicos foram: implementar cadastros de produtos e clientes, desenvolver lógica de cálculo com regras de negócio, criar relatórios gerenciais e ordenar dados de faturamento. O produto final entregue é um programa em C, versionado, que registra vendas, aplica taxa de devolução e gera relatórios consolidados.</p>
+<h1>COMUNIDADE (EXTERNA)</h1>
+<p>Para fins de simulação acadêmica, o sistema foi projetado para atender pequenos comerciantes varejistas locais, que representam a base do empreendedorismo brasileiro. A escolha se justifica pela dificuldade que esse público enfrenta para acessar softwares de gestão com baixo custo. O contexto é de lojas com média de 50 vendas diárias que necessitam de controle financeiro básico, emissão de relatórios e análise de desempenho mensal sem complexidade técnica.</p>
+<h1>DESENVOLVIMENTO</h1>
+<p>O projeto foi executado em 5 etapas com integração via Git: </p>
+<ol>
+<li>Definição da arquitetura com <code>structs</code>;</li>
+<li>Codificação modular;</li>
+<li>Integração contínua;</li>
+<li>Testes com 50 vendas/dia;</li>
+<li>Validação dos relatórios.</li>
+</ol>
+<p>A divisão de responsabilidades foi: Gabriel Bittencourt na estrutura e cadastros; Wallace Calisto nos cálculos e regras de negócio; Ana Beatriz da Silva Pinto nos relatórios e desafios; Guilherme Brazil na ordenação; Caio Barbosa Galvão na integração e testes.</p>
+<h2>Relação com os Objetivos do Desenvolvimento Sustentável</h2>
+<p>O projeto relaciona-se com o ODS 8: Trabalho Decente e Crescimento Econômico. Contribui para a meta 8.2 ao promover produtividade por meio da modernização tecnológica, automatizando controles manuais e gerando dados para decisão. Alinha-se à meta 8.3 ao apoiar o empreendedorismo, pois a ferramenta é aplicável em micro e pequenas empresas, facilitando a formalização de processos e a sustentabilidade econômica, conforme atividades-chave da ONU Brasil.</p>
+<h2>3.3 Desafios encontrados</h2>
+<p>Os principais desafios foram: manipulação de <code>structs</code> aninhadas por Gabriel, implementação da lógica de devolução por Wallace, formatação dos relatórios por Ana Beatriz, algoritmo de ordenação decrescente por Guilherme e resolução de conflitos de <code>merge</code> no Git por Caio. As mudanças de rota incluíram refatorar funções para melhor modularidade.</p>
+<h2>3.4 Aprendizagens obtidas</h2>
+<p>O grupo consolidou conhecimentos em programação estruturada, trabalho com arquivos, ordenação e uso profissional do Git. Desenvolveu-se também a capacidade de dividir tarefas e integrar código de múltiplos autores.</p>
+<h2>3.5 Relação teoria e prática</h2>
+<p>Os conceitos de <code>array</code>, <code>struct</code> e ordenação vistos em Algoritmos foram aplicados diretamente. A prática mostrou a importância de comentar código e padronizar nomes de variáveis para trabalho em equipe.</p>
+<h2>3.6 Impacto na comunidade externa</h2>
+<p>Como estudo de caso simulado, o projeto demonstra como uma ferramenta simples pode reduzir tempo gasto com controles manuais e evitar prejuízos por falhas de cálculo, impactando diretamente a gestão de pequenos negócios.</p>
+<h2>3.7 Impacto pessoal e coletivo</h2>
+<p>Como sujeito coletivo, o grupo aprendeu a colaborar tecnicamente. Individualmente, cada integrante aprofundou sua responsabilidade: cadastro, cálculo, relatório, ordenação e testes, entendendo a importância de cada parte no produto final.</p>
+<h1>RESULTADOS</h1>
+<p>O sistema processou com sucesso 50 vendas simuladas, gerou relatórios diário, mensal e anual corretos, e ordenou os meses por faturamento conforme requisito. A taxa de R$ 20,00 foi aplicada corretamente na segunda devolução.</p>
+<h2>4.2 Ferramentas</h2>
+<p>Foram utilizadas tabelas de teste para validar saídas e prints de tela para documentar a execução.</p>
+<h2>4.3 Reflexão</h2>
+<p>O projeto comprovou que mesmo com linguagem C é possível criar soluções úteis para o varejo. A limitação de 50 vendas é didática, mas a lógica é escalável.</p>
+<h2>4.4 Evidências</h2>
+<p><img src="./assets/images/01_menu.png" alt="Evidência 1 - Menu Inicial">
+<img src="./assets/images/02_cadastro_de_cliente.png" alt="Evidência 2 - Cadastro de Clientes">
+<img src="./assets/images/03_cadastro_de_produto.png" alt="Evidência 3 - Cadastro de Produtos">
+<img src="./assets/images/04_cadastro_de_pedido.png" alt="Evidência 4 - Cadastro de Pedido">
+<img src="./assets/images/05_devolucao.png" alt="Evidência 5 - Devolução">
+<img src="./assets/images/06_relatorio_diario.png" alt="Evidência 6 - Relatório Diário">
+<img src="./assets/images/07_relatorio_mensal.png" alt="Evidência 7 - Relatório Mensal">
+<img src="./assets/images/08_relatorio_anual.png" alt="Evidência 8 - Relatório Anual">
+<img src="./assets/images/09_menu_busca_rapida.png" alt="Evidência 9 - Menu de Busca Rápida">
+<img src="./assets/images/10_busca_rapida_cliente.png" alt="Evidência 10 - Busca Rápida - Cliente">
+<img src="./assets/images/11_busca_rapida_pedido.png" alt="Evidência 11 - Busca Rápida - Pedido">
+<img src="./assets/images/12_busca_rapida_produto.png" alt="Evidência 12 - Busca Rápida - Produto">
+<img src="./assets/images/13_program_shutdown.png" alt="Evidência 13 - Finalização do Programa"></p>
+<h1>CONSIDERAÇÕES FINAIS</h1>
+<p>O projeto atingiu seus objetivos ao entregar um sistema funcional que integra conceitos acadêmicos e demanda real de mercado. Conclui-se que a tecnologia é ferramenta essencial para o crescimento de pequenos negócios, alinhada ao ODS 8. Como desdobramento, sugere-se migrar o sistema para interface gráfica e banco de dados para uso em produção. A experiência foi fundamental para consolidar o aprendizado técnico e o trabalho em equipe.</p>
+<h1>REFERÊNCIAS</h1>
+<div class="referencias"><p>NAÇÕES UNIDAS BRASIL. <strong>Objetivo de Desenvolvimento Sustentável 8</strong>. Disponível em: <a href="https://brasil.un.org/pt-br/sdgs/8">https://brasil.un.org/pt-br/sdgs/8</a>. Acesso em: 4 jun. 2026.</p>
+<p>UNIVERSIDADE VEIGA DE ALMEIDA. <strong>Projeto de Extensão II</strong>. Disciplina Algoritmos e Laboratório de Programação. Rio de Janeiro, 2026.</p>
+</div>
+
+
+</body>
+</html>
