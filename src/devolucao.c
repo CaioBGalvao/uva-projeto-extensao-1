@@ -62,7 +62,8 @@ void devolucao_menu_registrar(void) {
 
     // Usuário escolhe o item a devolver
     int id_produto;
-    if (!ler_inteiro("\nID do Produto a devolver: ", &id_produto)) {
+    printf("\n");
+    if (!ler_inteiro("ID do Produto a devolver: ", &id_produto)) {
         printf("\nOperacao cancelada.\n");
         return;
     }
