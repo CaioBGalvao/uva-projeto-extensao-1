@@ -8,3 +8,4 @@ tests/bin_*
 *.txt
 *.csv
 *.exe
+.win.o
