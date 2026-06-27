@@ -9,3 +9,4 @@ tests/bin_*
 *.csv
 *.exe
 .win.o
+node_modules
